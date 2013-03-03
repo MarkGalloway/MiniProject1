@@ -1,4 +1,5 @@
 ## Katherina, run me by typing "python3.3-32 Main.py"
+# This enters 32 bit mode, which is needed for cx_oracle or it will explode.
 
 # mac port forward: ssh -L 1525:gwynne.cs.ualberta.ca:1521 mgallowa@ohaton.cs.ualberta.ca
 
