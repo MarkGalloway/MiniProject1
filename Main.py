@@ -10,7 +10,7 @@ import getpass
 def connection_test():
     #Our usernames, hardcoded for now...
     usr = "mgallowa"
-    #usr ="jasniewsk"
+    #usr ="jasiewsk"
 
     # Get password from command line rather than hardcode senstive info...
     pswd = getpass.getpass()
