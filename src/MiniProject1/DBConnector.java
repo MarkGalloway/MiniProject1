@@ -163,6 +163,7 @@ public class DBConnector {
 
     /*
      * inserts the statement in string S
+     * HAS ERRORS
      */
     public void insert(String s) {
         
