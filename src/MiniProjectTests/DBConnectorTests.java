@@ -11,7 +11,7 @@ public class DBConnectorTests {
         
         //Oracle db connection info
         String jdbcURL = "jdbc:oracle:thin:@localhost:1525:CRS"; //I port forwarded to make this work from my 1525 to gwynne 1521    
-        String jdbcUserName = "mgallowa"; //Hard coded, make dynamic before hand-in
+        String jdbcUserName = "mgallowa";
         String jdbcPassword = "!MG~26^rx";
         
         //Test constructor
@@ -43,14 +43,22 @@ public class DBConnectorTests {
         db.insert("insert into categories values ('cameras', 'buy/sell')");
         db.insert("insert into categories values ('computer', 'services')");
         
-        //db.insert("");
+        db.insert("insert into users values ('joe@ujiji.com','Joe Plumber', '1111', SYSDATE-2)");
+        db.insert("insert into users values ('bob@ujiji.com','Bob Carpenter', '2222', SYSDATE-1)");
+        
+        db.insert("insert into reviews values (1,5,'This review shows up', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-2)");
+        db.insert("insert into reviews values (2,5,'This review shows up', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE)");
+        db.insert("insert into reviews values (3,4,'This review shouldnt show up', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE-3)");
+        
+        
         
         System.out.println("TEST: Statements Inserted Successfully");
         
         //test listReviews
-        System.out.println("Testing List reviews");
-        db.listReviews("fred");
-        
+        db.listReviews("bob@ujuji.com");
+        System.out.println("TEST: End bob@ujuji.com");
+        db.listReviews("joe@ujiji.com");
+        System.out.println("TEST: End joe@ujiji.com");
         
         System.out.println("TEST: Testing Reviews Successful");
 
@@ -58,7 +66,7 @@ public class DBConnectorTests {
         
         //test close connection
         db.closeConnection();
-        System.out.println("Connection Successfully closed");
+        System.out.println("TEST: Connection Successfully closed");
     }
 
 }
