@@ -1,3 +1,5 @@
+package MiniProject1;
+
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -15,17 +17,17 @@ public class DBConnector {
     private static Connection connection = null;
     private Statement stmt = null;
     private String jdbcURL;
-    private String username;
-    private String password;
+    private String jdbcUserName;
+    private String jdbcPassword;
     
     /*
      * Constructor
      */
-    public DBConnector(String uname, String pwd, String URL) {
+    public DBConnector(String URL, String uname, String pwd ) {
         super();
-        this.username = uname;
-        this.password = pwd;
-        this.jdbcURL = URL;
+        this.setJdbcUserName(uname);
+        this.setJdbcPassword(pwd);
+        this.setJdbcURL(URL);
     }
     
     /*
@@ -43,7 +45,7 @@ public class DBConnector {
             DriverManager.registerDriver((Driver)drvClass.newInstance());
             
             //establish the connection
-            connection = DriverManager.getConnection(jdbcURL, username, password);
+            connection = DriverManager.getConnection(getJdbcURL(), getJdbcUserName(), getJdbcPassword());
             stmt = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         }
         catch (Exception e){
@@ -57,7 +59,7 @@ public class DBConnector {
     public void closeConnection() {
         
         if (connection == null) {
-            return;
+           return;
         }
         
         try {
@@ -70,7 +72,7 @@ public class DBConnector {
     }
     
     /*
-     * Drops some tables
+     * Drops the hard coded tables
      */
     public void dropTables() {
         try {   
@@ -86,7 +88,7 @@ public class DBConnector {
     }
     
     /*
-     * Creates some tables
+     * Creates the hard coded tables
      */
     public void createTables() {
         String categories = "create table categories " +
@@ -147,5 +149,55 @@ public class DBConnector {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    /*
+     * Lists the reviews for the user corresponding to argument 'username' which have been written 
+     * since his/her last login, ordered based on date with more recent reviews listed first.
+     */
+    public void listReviews(String username) {
+        //TODO
+        System.out.println("listReview called, but not yet implemented");
+        return;
+    }
+
+    /*
+     * inserts the statement in string S
+     */
+    public void insert(String s) {
+        
+        //add some sort of empty string check
+        // cause it throws on s = "";
+        
+        try {
+            stmt.executeUpdate(s);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    
+    public String getJdbcURL() {
+        return jdbcURL;
+    }
+
+    public void setJdbcURL(String jdbcURL) {
+        this.jdbcURL = jdbcURL;
+    }
+
+    public String getJdbcUserName() {
+        return jdbcUserName;
+    }
+
+    public void setJdbcUserName(String jdbcUserName) {
+        this.jdbcUserName = jdbcUserName;
+    }
+
+    public String getJdbcPassword() {
+        return jdbcPassword;
+    }
+
+    public void setJdbcPassword(String jdbcPassword) {
+        this.jdbcPassword = jdbcPassword;
     }
 }
