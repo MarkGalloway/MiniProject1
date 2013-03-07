@@ -6,3 +6,7 @@
 .project
 
 *.prefs
+
+bin/Main.class
+
+*.class
