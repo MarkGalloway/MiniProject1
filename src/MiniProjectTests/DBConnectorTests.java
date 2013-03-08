@@ -5,16 +5,12 @@ import java.util.ArrayList;
 
 import MiniProject1.DBConnector;
 
-
-
-
-
-
-
-
 //vhsbdivubeujnwoivskbvmsd
 ///vkjsbdviubseogindvm
 
+/*
+ * ssh -L 1525:gwynne.cs.ualberta.ca:1521 mgallowa@ohaton.cs.ualberta.ca
+ */
 
 
 public class DBConnectorTests {

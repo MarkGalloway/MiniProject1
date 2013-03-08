@@ -81,6 +81,7 @@ public class DBConnector {
      *  Unsure what the format of last reviews should be. just doing "date: xx reviewer: yy Reviewtext: zz"
      *  for now... this may need to be changed.
      * 
+     * TODO: More specs
      */
     public ArrayList<String> getReviews(String username) {
         
@@ -117,6 +118,7 @@ public class DBConnector {
      * to the current system date.
      * 
      * TODO: Error checks or return value?? Not sure if needed
+     * 
      */
     public void updateLoginDate(String username){
         
