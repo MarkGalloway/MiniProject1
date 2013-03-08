@@ -58,13 +58,13 @@ public class DBConnectorTests {
         }
         
         //test listReviews
-        rlist = db.listReviews("joe@ujiji.com");
+        rlist = db.getReviews("joe@ujiji.com");
         for (String s : rlist) {
             System.out.println(s);
         }
         System.out.println("TEST: End joe@ujiji.com");
         
-        rlist = db.listReviews("bob@ujiji.com");
+        rlist = db.getReviews("bob@ujiji.com");
         for (String s : rlist) {
             System.out.println(s);
         }

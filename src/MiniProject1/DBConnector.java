@@ -77,7 +77,7 @@ public class DBConnector {
      *  for now... this may need to be changed.
      * 
      */
-    public ArrayList<String> listReviews(String username) {
+    public ArrayList<String> getReviews(String username) {
         
         //input length conversion
         String usr = stringChop(username,20);
