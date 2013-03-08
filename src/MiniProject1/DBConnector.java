@@ -9,6 +9,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 /*
+ * 
+ * 
+ * 
+ * 
+ * 
  * Handles the nitty gritty syntax of interacting with the DB
  * so we don't need try/catch all over the place in the UI loop
  */
