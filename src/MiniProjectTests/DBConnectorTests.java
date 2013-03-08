@@ -48,7 +48,9 @@ public class DBConnectorTests {
             db.stmt.executeUpdate("insert into users values ('joe@ujiji.com','Joe Plumber', '1111', SYSDATE-2)");
             db.stmt.executeUpdate("insert into users values ('bob@ujiji.com','Bob Carpenter', '2222', SYSDATE-5)");
             
-            db.stmt.executeUpdate("insert into reviews values (1,5,'This review shows up for bob', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-2)");
+            db.stmt.executeUpdate("insert into reviews values (1,5,'This review shows up for bob first', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-2)");
+            db.stmt.executeUpdate("insert into reviews values (5,5,'This review shows up for bob third', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-4)");
+            db.stmt.executeUpdate("insert into reviews values (4,5,'This review shows up for bob second', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-3)");
             db.stmt.executeUpdate("insert into reviews values (2,5,'This review shows up for joe', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE)");
             db.stmt.executeUpdate("insert into reviews values (3,4,'This review shouldnt show up for joe', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE-3)");
         } catch (SQLException e) {
@@ -56,18 +58,18 @@ public class DBConnectorTests {
         }
         
         //test listReviews
+        rlist = db.listReviews("joe@ujiji.com");
+        for (String s : rlist) {
+            System.out.println(s);
+        }
+        System.out.println("TEST: End joe@ujiji.com");
+        
         rlist = db.listReviews("bob@ujiji.com");
         for (String s : rlist) {
             System.out.println(s);
         }
         System.out.println("TEST: End bob@ujiji.com");
         
-        rlist = db.listReviews("joe@ujiji.com");
-        for (String s : rlist) {
-            System.out.println(s);
-        }
-        System.out.println("TEST: End joe@ujiji.com");
-
         //test update login_date
         db.updateLoginDate("bob@ujiji.com");
         System.out.println("TEST: Date Updated Successfully");

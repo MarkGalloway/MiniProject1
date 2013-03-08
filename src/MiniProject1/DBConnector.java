@@ -254,6 +254,8 @@ public class DBConnector {
      * If the string is longer than max, it is shortened to be
      * max chars long. Simply cuts off the end of strings that are
      * too long for the DB.
+     * 
+     * TODO: refactoring: rename this function to something useful
      */
     private static String stringChop(String s, int max) {
         int maxLength = (s.length() < max) ? s.length() 
