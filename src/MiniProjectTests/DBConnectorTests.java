@@ -1,6 +1,7 @@
 package MiniProjectTests;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import MiniProject1.DBConnector;
 
@@ -11,6 +12,7 @@ public class DBConnectorTests {
      */
     public static void main(String[] args) {
         boolean rval;
+        ArrayList<String> rlist;
         
         //Oracle db connection info
         String jdbcURL = "jdbc:oracle:thin:@localhost:1525:CRS"; //I port forwarded to make this work from my 1525 to gwynne 1521    
@@ -54,11 +56,17 @@ public class DBConnectorTests {
         }
         
         //test listReviews
-        db.listReviews("bob@ujiji.com");
+        rlist = db.listReviews("bob@ujiji.com");
+        for (String s : rlist) {
+            System.out.println(s);
+        }
         System.out.println("TEST: End bob@ujiji.com");
-        db.listReviews("joe@ujiji.com");
+        
+        rlist = db.listReviews("joe@ujiji.com");
+        for (String s : rlist) {
+            System.out.println(s);
+        }
         System.out.println("TEST: End joe@ujiji.com");
-        System.out.println("TEST: Testing Reviews Successful");
 
         //test update login_date
         db.updateLoginDate("bob@ujiji.com");
