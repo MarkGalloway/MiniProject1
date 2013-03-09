@@ -49,83 +49,83 @@ public class Ad {
                ", Poster: " + this.getPoster() + ", Posters Average Rating: " + (((double)((int)(this.getAvgRating() * 10))) / 10);
     }
 
-    public String getAid() {
+    private String getAid() {
         return aid;
     }
 
-    public void setAid(String aid) {
+    private void setAid(String aid) {
         this.aid = aid;
     }
 
-    public String getAtype() {
+    private String getAtype() {
         return atype;
     }
 
-    public void setAtype(String atype) {
+    private void setAtype(String atype) {
         this.atype = atype;
     }
 
-    public String getTitle() {
+    private String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    private void setTitle(String title) {
         this.title = title;
     }
 
-    public Integer getPrice() {
+    private Integer getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    private void setPrice(Integer price) {
         this.price = price;
     }
 
-    public String getDescr() {
+    private String getDescr() {
         return descr;
     }
 
-    public void setDescr(String descr) {
+    private void setDescr(String descr) {
         this.descr = descr;
     }
 
-    public String getLocation() {
+    private String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    private void setLocation(String location) {
         this.location = location;
     }
 
-    public Date getPdate() {
+    private Date getPdate() {
         return pdate;
     }
 
-    public void setPdate(Date date) {
+    private void setPdate(Date date) {
         this.pdate = date;
     }
 
-    public String getCat() {
+    private String getCat() {
         return cat;
     }
 
-    public void setCat(String cat) {
+    private void setCat(String cat) {
         this.cat = cat;
     }
 
-    public String getPoster() {
+    private String getPoster() {
         return poster;
     }
 
-    public void setPoster(String poster) {
+    private void setPoster(String poster) {
         this.poster = poster;
     }
 
-    public double getAvgRating() {
+    private double getAvgRating() {
         return avgRating;
     }
 
-    public void setAvgRating(double avgRating) {
+    private void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
     }
 }
