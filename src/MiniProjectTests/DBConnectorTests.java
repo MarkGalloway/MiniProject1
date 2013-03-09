@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import MiniProject1.DBConnector;
+import MiniProject1.Review;
 
 //vhsbdivubeujnwoivskbvmsd
 ///vkjsbdviubseogindvm
@@ -20,7 +21,7 @@ public class DBConnectorTests {
      */
     public static void main(String[] args) {
         boolean rval;
-        ArrayList<String> rlist;
+        ArrayList<Review> rlist;
         
         //Oracle db connection info
         String jdbcURL = "jdbc:oracle:thin:@localhost:1525:CRS"; //I port forwarded to make this work from my 1525 to gwynne 1521    
@@ -66,14 +67,18 @@ public class DBConnectorTests {
         }    
         //test listReviews
         rlist = db.getReviews("joe@ujiji.com");
-        for (String s : rlist) {
-            System.out.println(s);
+        for (Review r : rlist) {
+            System.out.print("Date: " + r.getRdate());
+            System.out.print(", Rating: " + r.getRating());
+            System.out.println(", Text:" + DBConnector.stringChop(r.getText(), 40));
         }
         System.out.println("TEST: End joe@ujiji.com");
         
         rlist = db.getReviews("bob@ujiji.com");
-        for (String s : rlist) {
-            System.out.println(s);
+        for (Review r : rlist) {
+            System.out.print("Date: " + r.getRdate());
+            System.out.print(", Rating: " + r.getRating());
+            System.out.println(", Text:" + DBConnector.stringChop(r.getText(), 40));
         }
         System.out.println("TEST: End bob@ujiji.com");
         
