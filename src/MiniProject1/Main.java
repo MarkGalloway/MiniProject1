@@ -1,9 +1,30 @@
 package MiniProject1;
 
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.SpringLayout;
+
+import java.awt.Container;
+import java.awt.Image;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+
+
+
 /*
  * Comment me!
  */
-public class Main {
+public class Main extends JFrame {
 
     //private static String jdbcURL = "jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS";  //this is to connect from school
 //FIX
@@ -84,5 +105,123 @@ public class Main {
         System.out.println("Done Execution. see ya");
 //END DEBUG
     }
+    
+    JPanel panel = new JPanel();
+	
+	
+	public Main() {
+		setSize(680,300);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);//Sets if its visible.
+		
+		setTitle("MiniProject1");
+
+		SpringLayout springLayout = new SpringLayout();
+				getContentPane().setLayout(springLayout);
+				getContentPane().setBackground(Color.gray);
+
+				springLayout.putConstraint(SpringLayout.NORTH, panel, 10,
+						SpringLayout.NORTH, getContentPane());
+				springLayout.putConstraint(SpringLayout.WEST, panel, 10,
+						SpringLayout.WEST, getContentPane());
+				springLayout.putConstraint(SpringLayout.SOUTH, panel, 46,
+						SpringLayout.NORTH, getContentPane());
+				springLayout.putConstraint(SpringLayout.EAST, panel, 650,
+						SpringLayout.WEST, getContentPane());
+				getContentPane().add(panel);
+
+		JButton btnLogin = new JButton("Login");
+		//add(btnLogin);
+				btnLogin.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.out.print("Username:");//what the button says when clicked.
+						
+						Input.Bufferedreader();
+					    
+					    System.out.print("Password:");
+						
+					    Input.Bufferedreader();
+					}
+					
+				});
+				
+				panel.add(btnLogin);
+				
+				JButton btnSearchAds = new JButton("Search for Ads");
+				//add(btnOpen);
+				btnSearchAds.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.out.print("Search:");
+						
+						Input.Bufferedreader();
+					}
+				});
+				
+				panel.add(btnSearchAds);
+				
+				
+				JButton btnListAd = new JButton("List an Ad");
+				//add(btnOpen);
+				btnListAd.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.out.print("Search:");
+						
+						Input.Bufferedreader();
+					}
+				});
+				
+				panel.add(btnListAd);
+				
+				JButton btnSearchforUser = new JButton("Search for Users");
+				//add(btnOpen);
+				btnSearchforUser.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.out.print("Search for User:");
+						
+						Input.Bufferedreader();
+					}
+				});
+				
+				panel.add(btnSearchforUser);
+				
+				JButton btnPostanAd = new JButton("Post an Ad");
+				//add(btnOpen);
+				btnPostanAd.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.out.print("Post an ad:");
+						
+						Input.Bufferedreader();
+					}
+				});
+				
+				panel.add(btnPostanAd);
+				
+				JButton btnLogout = new JButton("Logout");
+				//add(btnOpen);
+				btnLogout.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						System.out.print("Goodbye");
+						
+						panel.setVisible(false);
+						System.exit(0);
+					}
+				});
+				
+				panel.add(btnLogout);
+				
+		}
+	public static class Input {
+		
+		public static void Bufferedreader(){
+		BufferedReader brUsername = new BufferedReader(new InputStreamReader(System.in));{
+	    try {
+			String username = brUsername.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+		}
+	}
 
 }
