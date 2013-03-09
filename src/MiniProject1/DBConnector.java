@@ -148,38 +148,40 @@ public class DBConnector {
      *  Checks the users table to see if the user exists and the password matches
      *  Returns true if the user exists and password matches
      *  Returns false if either user not found or password is wrong
+     *  
      */
     public boolean verifyUser(String username, String password) {
         
-        //input length conversion
-        String usr = stringChop(username,20);
-        String pwd = stringChop(password,4);
+        //input length and SQLstring conversion
+        String usr = "'" + stringChop(username,20) + "'";
+        String pwd = "'" + stringChop(password,4) + "'";
         
         //query to get all users
-        String query ="select * from users";
+        String query ="select email,pwd from users" +
+                     " where email = " + usr +
+                     " and pwd = " + pwd;
         
         try {
             //execute the query
             ResultSet rs = stmt.executeQuery(query);
             
-            //loop through the results
-            while (rs.next()) {
-                if(rs.getString("email").trim().equalsIgnoreCase(usr)  //TODO: is ignorecase right here??
-                        && rs.getString("pwd").trim().equalsIgnoreCase(pwd)) { //TODO: is ignorecase right here??
-                    //user matches username && pswd
-                    return true;
-                }
+            //check for a result. if there is one, then this username/password combo is valid.
+            if (!rs.next()) {
+                return false; //either user doesn't exist or password is wrong.
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        //no match, user does not exist
-        return false;
+        
+        //fall-through. User MUST exist, due to query returning a value
+        return true;
     }
     
     /*
      *  Checks the users table to see if the user exists
      *  Returns true if the user exists
+     *  
+     *  TODO: change data processing to all SQL... should be querying username 
      */
     public boolean existsUser(String username) {
         
@@ -252,6 +254,9 @@ public class DBConnector {
         
         return true;
     }
+    
+    
+    
     
     /*
      * Takes an input string and a max.
