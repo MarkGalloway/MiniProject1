@@ -42,7 +42,7 @@ public class Ad {
     
     /*
      * Returns a string containing a printable version of the Description, Location, Ad Category, Poster, 
-     * and Posters Avg Rating of an Ad
+     * and Posters Avg Rating(to one decimal place) of an Ad
      */
     public String toStringDetails() {
         return "Description: " + this.getDescr() + ", Location: " + this.getLocation() + ", Ad Category: " + this.getCat() + 

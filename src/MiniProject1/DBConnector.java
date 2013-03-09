@@ -251,8 +251,6 @@ public class DBConnector {
      * find rows in the ads table which have a the keyword in either title or descr.
      * 
      * Returns all found rows as Ad objects in an ArrayList
-     * 
-     * TODO: ADD: """and the poster's average rating if the poster has some reviews."""
      */
     public ArrayList<Ad> keywordSearch(ArrayList<String> keywords) {
         //return values holder
