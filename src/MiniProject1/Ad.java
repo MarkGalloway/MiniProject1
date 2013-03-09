@@ -43,10 +43,15 @@ public class Ad {
     /*
      * Returns a string containing a printable version of the Description, Location, Ad Category, Poster, 
      * and Posters Avg Rating(to one decimal place) of an Ad
+     * 
+     * If the user has no ratings, will print none instead of 0 (since 0 is misleading)
      */
     public String toStringDetails() {
+        
+        String s = ((int)this.getAvgRating() == 0)? "none": String.valueOf(((double)((int)(this.getAvgRating() * 10))) / 10);
+        
         return "Description: " + this.getDescr() + ", Location: " + this.getLocation() + ", Ad Category: " + this.getCat() + 
-               ", Poster: " + this.getPoster() + ", Posters Average Rating: " + (((double)((int)(this.getAvgRating() * 10))) / 10);
+               ", Poster: " + this.getPoster() + ", Posters Average Rating: " + s;
     }
 
     private String getAid() {
