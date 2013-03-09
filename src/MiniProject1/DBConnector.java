@@ -262,18 +262,20 @@ public class DBConnector {
         
         //loops through each keyword, querying the keyword for matching ads
         for (String s : keywords) {
-            query = "select *" +
-                   " from ads" +
-                   " where lower(title) LIKE '%" + s.toLowerCase() + "%'" +
-                   " or lower(descr) LIKE '%" + s.toLowerCase() + "%'" +
+            query = "select aid, atype, title, price, descr, location, pdate, cat, poster, AVG(rating) as avg" +
+                   " from ads left outer join reviews on poster = reviewee" +
+                   " where (lower(title) LIKE '%" + s.toLowerCase() + "%'" +" or lower(descr) LIKE '%" + s.toLowerCase() + "%')" +
+                   " group by aid, atype, title, price, descr, location, pdate, cat, poster" +
                    " order by pdate DESC";
             try {
                 rs = stmt.executeQuery(query);
                 //converts each result to an Ad datatype
                 while(rs.next()) {
                     ads.add(new Ad(rs.getString("aid").trim(), rs.getString("atype").trim(), rs.getString("title").trim(), rs.getInt("price"), 
-                           rs.getString("descr").trim(), rs.getString("location").trim(), rs.getDate("pdate"), rs.getString("cat").trim(),
-                           rs.getString("poster").trim()));
+                                   rs.getString("descr").trim(), rs.getString("location").trim(), rs.getDate("pdate"), rs.getString("cat").trim(),
+                                   rs.getString("poster").trim(), rs.getDouble("avg")
+                                  )
+                           );
                 }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
