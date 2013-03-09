@@ -3,6 +3,7 @@ package MiniProjectTests;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import MiniProject1.Ad;
 import MiniProject1.DBConnector;
 import MiniProject1.Review;
 
@@ -37,7 +38,7 @@ public class DBConnectorTests {
         
         //open connection
         db.openConnection();
-        System.out.println("TEST: Connection Successful");
+        System.out.println("DONE: Connection Successful");
         
         //drop tables
         dropTables(db);
@@ -56,12 +57,49 @@ public class DBConnectorTests {
             
             db.stmt.executeUpdate("insert into users values ('joe@ujiji.com','Joe Plumber', '1111', SYSDATE-2)");
             db.stmt.executeUpdate("insert into users values ('bob@ujiji.com','Bob Carpenter', '2222', SYSDATE-5)");
+            db.stmt.executeUpdate("insert into users values ('davood@ujiji.com','Davood Teacher', '3333', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('adam@sport.com','Adam Fan', '4444', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('Hagrid@hogwarts.com','Rubeus Hagred', '1212', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('vlad04@ujiji.com','Vladimir Lenin', '1917', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('bombardier@ujiji.com','Joseph Bombardier', '0123', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('H0ckeyg1rl@ujiji.com','Stacey Smyth', '1235', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('somejerk@ujiji.com','Rob Reseller', '4321', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('andy@eureka.com','Deputy Andy', '4312', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('divorcee42@ujiji.com','Jen Jones', '4132', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('Aphotos@ujiji.com','A Photos', '0234', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('CameraNerd@ujiji.com','B Petruk', '0345', SYSDATE-1)");
             
             db.stmt.executeUpdate("insert into reviews values (1,5,'This review shows up for bob first', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-2)");
             db.stmt.executeUpdate("insert into reviews values (5,5,'This review shows up for bob third', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-4)");
             db.stmt.executeUpdate("insert into reviews values (4,5,'This review shows up for bob second', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-3)");
             db.stmt.executeUpdate("insert into reviews values (2,5,'This shows up for joe and cuts out  now and does not show more', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE)");
             db.stmt.executeUpdate("insert into reviews values (3,4,'This review shouldnt show up for joe', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE-3)");
+            db.stmt.executeUpdate("insert into reviews values (6,5,'an all around nice fellow' , 'joe@ujiji.com', 'Hagrid@hogwarts.com', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into reviews values (7,4,'Very Handsome' , 'divorcee42@ujiji.com', 'vlad04@ujiji.com', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into reviews values (8,4,'doesnt know how to haggle' , 'bob@ujiji.com', 'Hagrid@hogwarts.com', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into reviews values (9,4,'Showed up late, but paid cash' , 'andy@eureka.com', 'Hagrid@hogwarts.com', SYSDATE-1)");
+            
+            db.stmt.executeUpdate("insert into offers values (1,3,5)");
+            db.stmt.executeUpdate("insert into offers values (2,7,10)");
+            
+            db.stmt.executeUpdate("insert into ads values ('a001','S','oilers ticket',90,'Feb 28, againts Stars','Edmonton','30-JAN-2013','tickets','bob@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a002','S','nikon camera',50,'working condition','Edmonton',sysdate,'cameras','davood@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a003','S','used oilers jersey',100,'Worn by Ryan Smyth, UNWASHED!!','Edmonton','01-FEB-2013','sports','H0ckeyg1rl@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a004','W','oilers tickets',20,'Need tickets. Paying $20 Firm','Edmonton','02-FEB-2013','tickets','somejerk@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a005','S','oilers tickets',50,'Tickets for sale. Low Price','Edmonton','03-FEB-2013','tickets','somejerk@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a006','S','robot sports oiler',50,'Keeps robot joints from squeeking','Edmonton','03-FEB-2013','sports','andy@eureka.com')");
+            db.stmt.executeUpdate("insert into ads values ('a007','S','oilers towel',19,'only used for drying my tears','Edmonton','29-JAN-2013','sports','divorcee42@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a008','S','oilers hockey stick',101,'signed by Ryan Smyth','Edmonton','04-FEB-2013','sports','H0ckeyg1rl@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a009','S','polaris 800 RUSH',5000,'ex''s old snowmobile','Edmonton','29-JAN-2013','buy/sell','divorcee42@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a010','S','rusty snowmobile',100,'needs repair','Calgary','30-JAN-2013','buy/sell','somejerk@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a011','W','flying snowmobile',2500,'must work','Hogwarts','01-FEB-2013','buy/sell','Hagrid@hogwarts.com')");
+            db.stmt.executeUpdate("insert into ads values ('a012','S','russian snowmobile',100,'might be broken','Moscow','01-FEB-2013','buy/sell','vlad04@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a013','S','shares in company',4,'my snowmobile division','Montreal','01-FEB-1960','buy/sell','bombardier@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a014','S','nikon',75,'ex''s old camera','Edmonton','29-JAN-2013','cameras','divorcee42@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a015','W','camera',100,'preferrably a nikon','Edmonton',SYSDATE-3,'cameras','Aphotos@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a016','S','my old camera',82,'selling my old camera','Victoria',SYSDATE-1,'cameras','CameraNerd@ujiji.com')");
+            db.stmt.executeUpdate("insert into ads values ('a017','W','nikon',101,'Need to take pics of Fluffy','Hogwarts',SYSDATE-2,'cameras','Hagrid@hogwarts.com')");
+            db.stmt.executeUpdate("insert into ads values ('a018','S','flying snowmobile',150,'kind of broken','Hogwarts','01-FEB-2013','buy/sell','Hagrid@hogwarts.com')");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }    
@@ -72,7 +110,7 @@ public class DBConnectorTests {
             System.out.print(", Rating: " + r.getRating());
             System.out.println(", Text:" + DBConnector.stringChop(r.getText(), 40));
         }
-        System.out.println("TEST: End joe@ujiji.com");
+        System.out.println("DONE: End joe@ujiji.com, check visually");
         
         rlist = db.getReviews("bob@ujiji.com");
         for (Review r : rlist) {
@@ -80,11 +118,11 @@ public class DBConnectorTests {
             System.out.print(", Rating: " + r.getRating());
             System.out.println(", Text:" + DBConnector.stringChop(r.getText(), 40));
         }
-        System.out.println("TEST: End bob@ujiji.com");
+        System.out.println("DONE: End bob@ujiji.com, check visually");
         
         //test update login_date
         db.updateLoginDate("bob@ujiji.com");
-        System.out.println("TEST: Date Updated Successfully");
+        System.out.println("DONE: Date Updated, check visually");
         
         //add new user test
         rval = db.addNewUser("mgallowa@email.com", "Mark Galloway", "1234");
@@ -135,12 +173,20 @@ public class DBConnectorTests {
             System.out.println("FAIL: verifyUser is broken or user does not exist");
         }
         
+        //Keyword Search tests
+        ArrayList<String> keywords = new ArrayList<String>();
+        keywords.add("snowmobile");
+        ArrayList<Ad> ads = db.keywordSearch(keywords);
         
+        for (Ad a : ads) {
+            System.out.println(a.toStringListing() + " " + a.toStringDetails());
+        }
+        System.out.println("DONE: keywordSeach() tests, check visually");
         
         
         // close connection
         db.closeConnection();
-        System.out.println("TEST: Connection Successfully closed");
+        System.out.println("DONE: Connection Successfully closed");
     }
 
     /*
