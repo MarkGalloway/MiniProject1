@@ -106,17 +106,13 @@ public class DBConnectorTests {
         //test listReviews
         rlist = db.getReviews("joe@ujiji.com");
         for (Review r : rlist) {
-            System.out.print("Date: " + r.getRdate());
-            System.out.print(", Rating: " + r.getRating());
-            System.out.println(", Text:" + DBConnector.stringChop(r.getText(), 40));
+            System.out.println(r.toStringListing() + " ;;; " + r.toStringFullText());
         }
         System.out.println("DONE: End joe@ujiji.com, check visually");
         
         rlist = db.getReviews("bob@ujiji.com");
         for (Review r : rlist) {
-            System.out.print("Date: " + r.getRdate());
-            System.out.print(", Rating: " + r.getRating());
-            System.out.println(", Text:" + DBConnector.stringChop(r.getText(), 40));
+            System.out.println(r.toStringListing() + " ;;; " + r.toStringFullText());
         }
         System.out.println("DONE: End bob@ujiji.com, check visually");
         
