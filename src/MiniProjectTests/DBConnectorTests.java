@@ -59,12 +59,11 @@ public class DBConnectorTests {
             db.stmt.executeUpdate("insert into reviews values (1,5,'This review shows up for bob first', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-2)");
             db.stmt.executeUpdate("insert into reviews values (5,5,'This review shows up for bob third', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-4)");
             db.stmt.executeUpdate("insert into reviews values (4,5,'This review shows up for bob second', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-3)");
-            db.stmt.executeUpdate("insert into reviews values (2,5,'This review shows up for joe', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE)");
+            db.stmt.executeUpdate("insert into reviews values (2,5,'This shows up for joe and cuts out  now and does not show more', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE)");
             db.stmt.executeUpdate("insert into reviews values (3,4,'This review shouldnt show up for joe', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE-3)");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }
-        
+        }    
         //test listReviews
         rlist = db.getReviews("joe@ujiji.com");
         for (String s : rlist) {

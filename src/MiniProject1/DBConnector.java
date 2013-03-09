@@ -77,11 +77,8 @@ public class DBConnector {
      * Takes as input a 'username' and returns an ArrayList of the reviews corresponding 'username' which have been written 
      * since his/her last login, ordered based on date with more recent reviews listed first.
      * 
-     * TODO:
-     *  Unsure what the format of last reviews should be. just doing "date: xx reviewer: yy Reviewtext: zz"
-     *  for now... this may need to be changed.
-     * 
-     * TODO: More specs
+     * TODO: Returns all of them in an arraylist. in the UI, should handle the printing of 3 at a time then ask if 
+     *       the user wants to see the next 3. Too hard to do here.
      */
     public ArrayList<String> getReviews(String username) {
         
@@ -102,9 +99,10 @@ public class DBConnector {
             ResultSet rs = stmt.executeQuery(query);
             
             while(rs.next()){
-                out.add("Date: " + rs.getDate(6) +
-                		", Reviewer: " + (rs.getString(4)).trim() +
-                		", Review Text: " + rs.getString(3));
+                out.add("Review date: " + rs.getDate("rdate") +
+                		", Review rating: " + rs.getInt("rating") +
+                		", Review text: " + stringChop(rs.getString(3).trim(), 40)
+                	   );
             }
             
         } catch (SQLException e) {
