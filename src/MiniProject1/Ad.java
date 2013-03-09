@@ -7,19 +7,19 @@ import java.sql.Date;
  */
 public class Ad {
     
-    private String aid;
+    private String aid; //Maybe remove, not used (yet)
     private String atype;
     private String title;
     private Integer price;
     private String descr;
     private String location;
-    private Date date;
+    private Date pdate;
     private String cat;
     private String poster;
-    //private Integer avgRating;
+    private double avgRating;
     
     public Ad(String aid, String atype, String title, Integer price, String descr, 
-              String location, Date date, String cat, String poster) {
+              String location, Date date, String cat, String poster, double avgRating) {
         super();
         this.setAid(aid);
         this.setAtype(atype);
@@ -27,9 +27,26 @@ public class Ad {
         this.setPrice(price);
         this.setDescr(descr);
         this.setLocation(location);
-        this.setDate(date);
+        this.setPdate(date);
         this.setCat(cat);
         this.setPoster(poster);
+        this.setAvgRating(avgRating);
+    }
+    
+    /*
+     * Returns a string containing a printable version of the Ad Type, Title, Price, and Posting Date of an Ad.
+     */
+    public String toStringListing() {
+        return "Ad Type: " + this.getAtype() + ", Title: " + this.getTitle() + ", Price: " + this.getPrice() + ", Posting Date: " + this.getPdate();
+    }
+    
+    /*
+     * Returns a string containing a printable version of the Description, Location, Ad Category, Poster, 
+     * and Posters Avg Rating of an Ad
+     */
+    public String toStringDetails() {
+        return "Description: " + this.getDescr() + ", Location: " + this.getLocation() + ", Ad Category: " + this.getCat() + 
+               ", Poster: " + this.getPoster() + ", Posters Average Rating: " + (((double)((int)(this.getAvgRating() * 10))) / 10);
     }
 
     public String getAid() {
@@ -80,12 +97,12 @@ public class Ad {
         this.location = location;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getPdate() {
+        return pdate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setPdate(Date date) {
+        this.pdate = date;
     }
 
     public String getCat() {
@@ -102,5 +119,13 @@ public class Ad {
 
     public void setPoster(String poster) {
         this.poster = poster;
+    }
+
+    public double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
     }
 }
