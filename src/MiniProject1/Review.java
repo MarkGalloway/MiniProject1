@@ -7,68 +7,76 @@ import java.sql.Date;
  */
 public class Review {
 
-    private Integer rno;
+    private Integer rno; //remove?
     private Integer rating;
     private String text;
-    private String reviewer;
-    private String reviewee;
+    private String reviewer; //remove?
+    private String reviewee; // remove?
     private Date rdate;
     
     public Review(Integer rno, Integer rating, String text, String reviewer, String reviewee, Date rdate) {
         super();
-        this.rno = rno;
-        this.rating = rating;
-        this.text = text;
-        this.reviewer = reviewer;
-        this.reviewee = reviewee;
+        this.setRno(rno);
+        this.setRating(rating);
+        this.setText(text);
+        this.setReviewer(reviewer);
+        this.setReviewee(reviewee);
         this.setRdate(rdate);
     }
 
-    public Integer getRno() {
+    public String toStringListing() {
+        return "Review Date: " + this.getRdate() +", Rating: " + this.getRating() +", Review Text(40 chars): " + DBConnector.stringChop(this.getText(), 40);
+    }
+    
+    public String toStringFullText() {
+        return "Full Review Text: " + this.getText();
+    }
+    
+    private Integer getRno() {
         return rno;
     }
 
-    public void setRno(Integer rno) {
+    private void setRno(Integer rno) {
         this.rno = rno;
     }
 
-    public Integer getRating() {
+    private Integer getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    private void setRating(Integer rating) {
         this.rating = rating;
     }
 
-    public String getText() {
+    private String getText() {
         return text;
     }
 
-    public void setText(String text) {
+    private void setText(String text) {
         this.text = text;
     }
 
-    public String getReviewer() {
+    private String getReviewer() {
         return reviewer;
     }
 
-    public void setReviewer(String reviewer) {
+    private void setReviewer(String reviewer) {
         this.reviewer = reviewer;
     }
 
-    public String getReviewee() {
+    private String getReviewee() {
         return reviewee;
     }
 
-    public void setReviewee(String reviewee) {
+    private void setReviewee(String reviewee) {
         this.reviewee = reviewee;
     }
 
-    public Date getRdate() {
+    private Date getRdate() {
         return rdate;
     }
 
-    public void setRdate(Date rdate) {
+    private void setRdate(Date rdate) {
         this.rdate = rdate;
     }
 }
