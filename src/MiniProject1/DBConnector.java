@@ -74,41 +74,37 @@ public class DBConnector {
     }
     
     /*
-     * Takes as input a 'username' and returns an ArrayList of the reviews corresponding 'username' which have been written 
+     * Takes as input a 'username' and returns an ArrayList of the Reviews corresponding 'username' which have been written 
      * since his/her last login, ordered based on date with more recent reviews listed first.
-     * 
-     * TODO: Returns all of them in an arraylist. in the UI, should handle the printing of 3 at a time then ask if 
-     *       the user wants to see the next 3. Too hard to do here.
      */
-    public ArrayList<String> getReviews(String username) {
+    public ArrayList<Review> getReviews(String username) {
+        //to hold return values
+        ArrayList<Review> reviews = new ArrayList<Review>();
         
-        //input length conversion
-        String usr = stringChop(username,20);
+        //input length and sql string conversion
+        String usr = "'" + stringChop(username,20)  + "'";
         
         //query to get the users reviews which are new since last login
         String query = "select *" +
                       " from reviews R, users U" +
-                      " where U.email = "+ "'" + usr + "'" + 
+                      " where U.email = "+ usr + 
                       " and  R.reviewee = U.email" +
                       " and R.rdate > U.last_login" +
                       " order by R.rdate DESC";
-        
-        ArrayList<String> out = new ArrayList<String>();
-        
+
         try {
             ResultSet rs = stmt.executeQuery(query);
             
             while(rs.next()){
-                out.add("Review date: " + rs.getDate("rdate") +
-                		", Review rating: " + rs.getInt("rating") +
-                		", Review text: " + stringChop(rs.getString(3).trim(), 40)
-                	   );
+                //add returned data to arraylist
+                reviews.add(new Review(rs.getInt("rno"), rs.getInt("rating"), rs.getString("text").trim(), 
+                        rs.getString("reviewer").trim(), rs.getString("reviewee").trim(), rs.getDate("rdate")));
             }
-            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return out;
+
+        return reviews;
     }
     
     /*
@@ -181,7 +177,6 @@ public class DBConnector {
      *  Checks the users table to see if the user exists
      *  Returns true if the user exists, false otherwise
      *  
-     *  TODO: change data processing to all SQL... should be querying username 
      */
     public boolean existsUser(String username) {
         
@@ -245,7 +240,6 @@ public class DBConnector {
             rs.updateDate("last_login", sqlDate);
             //make permanent
             rs.insertRow();
-            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -253,9 +247,41 @@ public class DBConnector {
         return true;
     }
     
-    
-    
-    
+    /* TODO: Assumed case-insensitivity. Not clear in spec.
+     * 
+     * Takes as argument some keywords. Launches an SQL query for each keyword to
+     * find rows in the ads table which have a the keyword in either title or descr.
+     * 
+     * Returns all found rows as Ad objects in an ArrayList
+     */
+    public ArrayList<Ad> keywordSearch(ArrayList<String> keywords) {
+        //return values holder
+        ArrayList<Ad> ads = new ArrayList<Ad>();
+        String query;
+        ResultSet rs;
+        
+        //loops through each keyword, querying the keyword for matching ads
+        for (String s : keywords) {
+            query = "select *" +
+                   " from ads" +
+                   " where lower(title) LIKE '%" + s.toLowerCase() + "%'" +
+                   " or lower(descr) LIKE '%" + s.toLowerCase() + "%'" +
+                   " order by pdate DESC";
+            try {
+                rs = stmt.executeQuery(query);
+                //converts each result to an Ad datatype
+                while(rs.next()) {
+                    ads.add(new Ad(rs.getString("aid").trim(), rs.getString("atype").trim(), rs.getString("title").trim(), rs.getInt("price"), 
+                           rs.getString("descr").trim(), rs.getString("location").trim(), rs.getDate("pdate"), rs.getString("cat").trim(),
+                           rs.getString("poster").trim()));
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        //return the matching ads
+        return ads;
+    }
     
     /*
      * Takes an input string and a max.
@@ -266,7 +292,7 @@ public class DBConnector {
      * 
      * TODO: refactoring: rename this function to something useful
      */
-    private static String stringChop(String s, int max) {
+    public static String stringChop(String s, int max) {
         int maxLength = (s.length() < max) ? s.length() 
                                            : max;
         return s.substring(0, maxLength);
