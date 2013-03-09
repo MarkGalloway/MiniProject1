@@ -10,9 +10,7 @@ import java.util.ArrayList;
 
 /*
  * 
- * 
- * 
- * 
+ * COMMENT ME BETTER!
  * 
  * Handles the nitty gritty syntax of interacting with the DB
  * so we don't need try/catch all over the place in the UI loop
@@ -253,6 +251,8 @@ public class DBConnector {
      * find rows in the ads table which have a the keyword in either title or descr.
      * 
      * Returns all found rows as Ad objects in an ArrayList
+     * 
+     * TODO: ADD: """and the poster's average rating if the poster has some reviews."""
      */
     public ArrayList<Ad> keywordSearch(ArrayList<String> keywords) {
         //return values holder
@@ -291,6 +291,7 @@ public class DBConnector {
      * too long for the DB.
      * 
      * TODO: refactoring: rename this function to something useful
+     * TODO: refactoring: pull method into Utils package
      */
     public static String stringChop(String s, int max) {
         int maxLength = (s.length() < max) ? s.length() 

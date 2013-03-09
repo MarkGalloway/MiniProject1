@@ -16,6 +16,7 @@ public class Ad {
     private Date date;
     private String cat;
     private String poster;
+    //private Integer avgRating;
     
     public Ad(String aid, String atype, String title, Integer price, String descr, 
               String location, Date date, String cat, String poster) {
