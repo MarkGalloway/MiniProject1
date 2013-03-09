@@ -173,40 +173,38 @@ public class DBConnector {
             System.out.println(e.getMessage());
         }
         
-        //fall-through. User MUST exist, due to query returning a value
+        //fall-through. email and password MUST be correct, due to query returning a value
         return true;
     }
     
     /*
      *  Checks the users table to see if the user exists
-     *  Returns true if the user exists
+     *  Returns true if the user exists, false otherwise
      *  
      *  TODO: change data processing to all SQL... should be querying username 
      */
     public boolean existsUser(String username) {
         
         //input length conversion
-        String usr = stringChop(username,20);
+        String usr = "'" + stringChop(username,20) + "'";
         
         //query to select primary key of all users
-        String query ="select email from users";
+        String query ="select email from users where email = " + usr;
         
         try {
             //execute query
             ResultSet rs = stmt.executeQuery(query);
-            //loop through results
-            while (rs.next()) {
-                if(rs.getString("email").trim().equalsIgnoreCase(usr)) { //TODO: is ignorecase right here??
-                    //user found
-                    return true;
-                }
+            
+            //check for a result. if there is one, then this username is valid
+            if (!rs.next()) {
+                return false; //this username does not exist
             }
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        //user not found
-        return false;
+        //fall-through. User MUST exist, due to query returning a value
+        return true;
     }
     
     /*
@@ -254,6 +252,7 @@ public class DBConnector {
         
         return true;
     }
+    
     
     
     
