@@ -42,7 +42,7 @@ public class Main extends JFrame{
 	JPanel panel = new JPanel();
 
 	static String enteredtext = "a";
-	String[] arr = new String[2];
+	String[] arr = new String[3];
 
 	public Main() {
 		setSize(800,300);
@@ -73,10 +73,22 @@ public class Main extends JFrame{
 						System.out.print("Username:");//what the button says when clicked.
 						
 						Input.Bufferedreader();
+						
+						arr[0] = enteredtext;
 					    
+						System.out.print("Name:");
+						
+					    Input.Bufferedreader();
+					    
+					    arr[1] = enteredtext;
+						
 					    System.out.print("Password:");
 						
 					    Input.Bufferedreader();
+					   
+					    arr[2] = enteredtext;
+					    
+					    System.out.println( db.addNewUser(arr[0], arr[1], arr[2]));
 					}
 					
 				});
@@ -102,9 +114,19 @@ public class Main extends JFrame{
 				System.out.println(enteredtext);
 				
 				arr[1] = enteredtext;
+
+				//System.out.println( arr[0] +" "+ arr[1]);
 				
-				System.out.println( db.verifyUser(arr[0], arr[1]));
+				boolean checkUser = db.verifyUser(arr[0], arr[1]);
 				
+				if(checkUser==false){
+					System.out.println("Username or password are invalid");
+					
+				}
+				
+				//System.out.println( db.verifyUser(arr[0], arr[1]));
+
+				//System.out.println( db.existsUser(arr[0]) );
 			}
 
 		});
@@ -166,7 +188,7 @@ public class Main extends JFrame{
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.print("Goodbye");
-
+				db.closeConnection();
 				panel.setVisible(false);
 				System.exit(0);
 			}
@@ -256,10 +278,10 @@ public class Main extends JFrame{
 
 
 		//Disconnect from DB
-		db.closeConnection();
+		//db.closeConnection();
 
 		//BEGIN DEBUG
-		System.out.println("Connection closed");
+		//System.out.println("Connection closed");
 
 		System.out.println("Done Execution. see ya");
 		//END DEBUG
