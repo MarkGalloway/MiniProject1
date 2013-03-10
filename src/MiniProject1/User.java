@@ -15,8 +15,11 @@ public class User {
     }
 
     public String toString() {
+        
+        String s = (this.getAvgRating().intValue() == 0)? "": ", Users Average Rating: " + String.valueOf(((double)((int)(this.getAvgRating() * 10))) / 10);
+        
         return "Email: " + this.getEmail() + ", Name: " + this.getName() + 
-                ", Number of Ads: " + this.getNumberOfAds() + ", Average Rating: " + String.valueOf(((double)((int)(this.getAvgRating() * 10))) / 10);
+                ", Number of Ads: " + this.getNumberOfAds() + s;
     }
     
     public String getName() {
