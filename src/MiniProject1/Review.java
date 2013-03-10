@@ -25,58 +25,58 @@ public class Review {
     }
 
     public String toStringListing() {
-        return "Review Date: " + this.getRdate() +", Rating: " + this.getRating() +", Review Text(40 chars): " + DBConnector.stringChop(this.getText(), 40);
+        return "Review Date: " + this.getRdate() +", Rating: " + this.getRating() +", Review Text(40 chars): " + Utils.stringChop(this.getText(), 40);
     }
     
     public String toStringFullText() {
         return "Full Review Text: " + this.getText();
     }
     
-    private Integer getRno() {
+    public Integer getRno() {
         return rno;
     }
 
-    private void setRno(Integer rno) {
+    public void setRno(Integer rno) {
         this.rno = rno;
     }
 
-    private Integer getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    private void setRating(Integer rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 
-    private String getText() {
+    public String getText() {
         return text;
     }
 
-    private void setText(String text) {
+    public void setText(String text) {
         this.text = text;
     }
 
-    private String getReviewer() {
+    public String getReviewer() {
         return reviewer;
     }
 
-    private void setReviewer(String reviewer) {
+    public void setReviewer(String reviewer) {
         this.reviewer = reviewer;
     }
 
-    private String getReviewee() {
+    public String getReviewee() {
         return reviewee;
     }
 
-    private void setReviewee(String reviewee) {
+    public void setReviewee(String reviewee) {
         this.reviewee = reviewee;
     }
 
-    private Date getRdate() {
+    public Date getRdate() {
         return rdate;
     }
 
-    private void setRdate(Date rdate) {
+    public void setRdate(Date rdate) {
         this.rdate = rdate;
     }
 }
