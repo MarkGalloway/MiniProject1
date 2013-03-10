@@ -2,24 +2,28 @@ package MiniProjectTests;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import MiniProject1.Ad;
 import MiniProject1.DBConnector;
+import MiniProject1.Offer;
 import MiniProject1.Review;
 
 
-/*
- * TODO: 2. add promotion
- *          TODO: generate unqiue pur_id
- *          TODO: clarify "My system should keep a record"
+/* TODO LIST:::::
+ * 
+ * High priority:
  * TODO: 3. search for users
  *          TODO: name search
  *                  TODO: list review texts
- *                      TODO: generate unique ID again
  *          TODO: write reviews
  * TODO: 4. post an ad
- *          TODO: generate unique_aid
+ * 
+ * Medium Priority:
+ * TODO: 2. clarify "My system should keep a record"
+ * 
+ * Low Priority:
  * TODO: Superclass Ad
+ * TODO: utils package
+ * TODO: Make date generator, to utils
  * 
  * 
  */
@@ -52,8 +56,13 @@ public class DBConnectorTests {
         assert db.getJdbcURL() == "jdbc:oracle:thin:@localhost:1525:CRS";
         
         //open connection
-        db.openConnection();
-        System.out.println("DONE: Connection Successful");
+        rval = db.openConnection();
+        if(rval) {
+            System.out.println("PASS: Connection Successful");
+        } else {
+            System.out.println("FAIL: Connection Failed");
+            System.exit(0);
+        }
         
         //drop tables
         dropTables(db);
@@ -140,18 +149,18 @@ public class DBConnectorTests {
         }
         System.out.println("DONE: keywordSeach() tests, check visually");
         
-        //list own ads test
-        ads = db.listOwnAds("Hagrid@hogwarts.com");
+        //get own ads test
+        ads = db.getOwnAds("Hagrid@hogwarts.com");
         for (Ad a : ads) {
             System.out.println(a.toStringListOwnAds());
         }
         System.out.println("DONE: Hagrids ads");
-        ads = db.listOwnAds("mgallowa@email.com");
+        ads = db.getOwnAds("mgallowa@email.com");
         for (Ad a : ads) {
             System.out.println(a.toStringListOwnAds());
         }
         System.out.println("DONE: marks ads");
-        ads = db.listOwnAds("divorcee42@ujiji.com");
+        ads = db.getOwnAds("divorcee42@ujiji.com");
         for (Ad a : ads) {
             System.out.println(a.toStringListOwnAds());
         }
@@ -166,11 +175,32 @@ public class DBConnectorTests {
             System.out.println("FAIL: deleteAd() returned failure");
         }
         
+        //getOffers() test
+        ArrayList<Offer> offers = db.getOffers();
+        for (Offer o : offers){
+            System.out.println(o.toString());
+        }
+        System.out.println("DONE: listOffers() tests, check visually");
         
+        
+        System.out.println(db.getOwnAds("vlad04@ujiji.com").get(0).toStringListOwnAds());
+        System.out.println(db.getOffers().get(2).toString());
+        //promoteAd() test
+        rval = db.promoteAd( db.getOwnAds("vlad04@ujiji.com").get(0), db.getOffers().get(2));
+        if(rval) {
+            System.out.println("PASS: promoteAd() returns success, also check visually");
+        } else {
+            System.out.println("FAIL: deleteAd() had some error or something");
+        }
         
         // close connection
-        db.closeConnection();
-        System.out.println("DONE: Connection Successfully closed");
+        rval = db.closeConnection();
+        if(rval) {
+            System.out.println("PASS: Connection Successfully closed");
+        } else {
+            System.out.println("FAIL: Connection failed to close");
+            System.exit(0);
+        }
     }
 
     /*
@@ -234,6 +264,7 @@ public class DBConnectorTests {
             db.stmt.executeUpdate(purchases);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.exit(-1);
         }
     }
 
@@ -250,6 +281,7 @@ public class DBConnectorTests {
             db.stmt.executeUpdate("drop table categories");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.exit(-1);
         }
     }
     
@@ -319,6 +351,7 @@ public class DBConnectorTests {
             
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            System.exit(-1);
         }    
     }
 }
