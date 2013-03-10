@@ -280,9 +280,9 @@ public class DBConnector {
             ResultSet rs = stmt.executeQuery(query);
             //converts each result to an Ad datatype
             while(rs.next()) {
-                ads.add(new Ad(rs.getString("aid").trim(), rs.getString("atype").trim(), rs.getString("title").trim(), rs.getInt("price"), 
-                               rs.getString("descr").trim(), rs.getString("location").trim(), rs.getDate("pdate"), rs.getString("cat").trim(),
-                               rs.getString("poster").trim(), rs.getDouble("avg")
+                ads.add(new Ad(rs.getString("atype").trim(), rs.getString("title").trim(), rs.getInt("price"), 
+                               rs.getString("descr").trim(), rs.getString("location").trim(), rs.getDate("pdate"), 
+                               rs.getString("cat").trim(), rs.getString("poster").trim(), rs.getDouble("avg")
                               )
                        );
             }
@@ -292,6 +292,40 @@ public class DBConnector {
         //return the matching ads
         return ads;
     }
+    
+    /*
+     * Takes as argument a username string. Queries the database for all
+     * ads which have been posted by that username. Returns an Ad object containing
+     * the relevant data: aid, atype, title, price, pdate, and ldate.
+     * ldate is the number of days remaining on any purchased offers.
+     */
+    public ArrayList<Ad> listOwnAds(String username) {
+        //return value holder
+        ArrayList<Ad> ads = new ArrayList<Ad>();
+        
+        //convert username
+        String usr = "'" + stringChop(username,20) + "'";
+        
+        String query = "select A.aid, atype, title, A.price, pdate, round(ndays - (sysdate - start_date)) as ldate" +
+        		      " from ads A left outer join purchases P on A.aid=P.aid left outer join offers O on P.ono=O.ono" +
+        		      " where poster = " + usr;
+        
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            //converts each result to an Ad datatype
+            while(rs.next()) {
+                ads.add(new Ad(rs.getString("aid").trim(), rs.getString("atype").trim(), rs.getString("title").trim(), rs.getInt("price"), 
+                               rs.getDate("pdate"), rs.getInt("ldate")
+                              )
+                       );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        //return the matching ads
+        return ads;
+    }
+    
     
     /*
      * Takes an input string and a max.
