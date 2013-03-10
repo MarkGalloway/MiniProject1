@@ -16,9 +16,11 @@ import MiniProject1.Review;
  *                  TODO: list review texts
  *          TODO: write reviews
  * TODO: 4. post an ad
+ * TODO: The Design Document
  * 
  * Medium Priority:
  * TODO: 2. clarify "My system should keep a record"
+ * TODO: Havent been chopping all inputs.. maybe katherine will do this
  * 
  * Low Priority:
  * TODO: Superclass Ad
@@ -182,15 +184,20 @@ public class DBConnectorTests {
         }
         System.out.println("DONE: listOffers() tests, check visually");
         
-        
-        System.out.println(db.getOwnAds("vlad04@ujiji.com").get(0).toStringListOwnAds());
-        System.out.println(db.getOffers().get(2).toString());
         //promoteAd() test
         rval = db.promoteAd( db.getOwnAds("vlad04@ujiji.com").get(0), db.getOffers().get(2));
         if(rval) {
             System.out.println("PASS: promoteAd() returns success, also check visually");
         } else {
             System.out.println("FAIL: deleteAd() had some error or something");
+        }
+        
+        //insertAd() test
+        rval = db.insertAd(new Ad("S", "WTB Motherboard", 129, "AMD FX-880 PRO", "Edmonton", "computer" ), "mgallowa@email.com");
+        if(rval) {
+            System.out.println("PASS: insertAd() returns success, also check visually");
+        } else {
+            System.out.println("FAIL: insertAd() had some error or something");
         }
         
         // close connection

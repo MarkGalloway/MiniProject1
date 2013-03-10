@@ -20,6 +20,19 @@ public class Ad {
     private Integer daysLeft = null;
     
     /*
+     * Constructor for new Ad
+     */
+    public Ad(String atype, String title, Integer price, String descr, String location, String cat) {
+        super();
+        this.setAtype(atype);
+        this.setTitle(title);
+        this.setPrice(price);
+        this.setDescr(descr);
+        this.setLocation(location);
+        this.setCat(cat);
+    }
+    
+    /*
      * Constructor for own listed Ad
      */
     public Ad(String aid, String atype, String title, Integer price, Date date, Integer daysLeft) {
@@ -82,87 +95,87 @@ public class Ad {
         return aid;
     }
 
-    private void setAid(String aid) {
+    public void setAid(String aid) {
         this.aid = aid;
     }
 
-    private String getAtype() {
+    public String getAtype() {
         return atype;
     }
 
-    private void setAtype(String atype) {
+    public void setAtype(String atype) {
         this.atype = atype;
     }
 
-    private String getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    private void setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    private Integer getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    private void setPrice(Integer price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    private String getDescr() {
+    public String getDescr() {
         return descr;
     }
 
-    private void setDescr(String descr) {
+    public void setDescr(String descr) {
         this.descr = descr;
     }
 
-    private String getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    private void setLocation(String location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
-    private Date getPdate() {
+    public Date getPdate() {
         return pdate;
     }
 
-    private void setPdate(Date date) {
+    public void setPdate(Date date) {
         this.pdate = date;
     }
 
-    private String getCat() {
+    public String getCat() {
         return cat;
     }
 
-    private void setCat(String cat) {
+    public void setCat(String cat) {
         this.cat = cat;
     }
 
-    private String getPoster() {
+    public String getPoster() {
         return poster;
     }
 
-    private void setPoster(String poster) {
+    public void setPoster(String poster) {
         this.poster = poster;
     }
 
-    private Double getAvgRating() {
+    public Double getAvgRating() {
         return avgRating;
     }
 
-    private void setAvgRating(Double avgRating) {
+    public void setAvgRating(Double avgRating) {
         this.avgRating = avgRating;
     }
 
-    private Integer getDaysLeft() {
+    public Integer getDaysLeft() {
         return daysLeft;
     }
 
-    private void setDaysLeft(Integer daysLeft) {
+    public void setDaysLeft(Integer daysLeft) {
         this.daysLeft = daysLeft;
     }
 }

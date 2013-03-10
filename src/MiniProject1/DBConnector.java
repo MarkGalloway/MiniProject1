@@ -438,6 +438,54 @@ public class DBConnector {
     }
     
     /*
+     * Takes as arguments an Ad object and a username string. Generates a
+     * unique id and the current date. Uses the unique id, current date,
+     * username string, and the values stored in the Ad object to create
+     * a new row in the ads table correspondign to the values contained in
+     * the arguments.
+     * 
+     * Returns true on success
+     */
+    public boolean insertAd(Ad ad, String username) {
+        //random new (possibly) Unique ID
+        String aid = generateRandom();
+        //the new current date
+        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+        
+        String query1 = "Select aid from ads where aid = " + "'" + aid + "'";
+        String query2 = "Select aid, atype, title, price, descr, location, pdate, cat, poster from ads";
+        
+        ResultSet rs;
+        try {
+            //keep generating new random ID until we have a unique one
+            rs = stmt.executeQuery(query1);
+            while(rs.next()) {
+                //query returned a match, id already exists
+                aid = generateRandom();
+                rs = stmt.executeQuery(query1);
+            }
+            //get the table
+            rs = stmt.executeQuery(query2);
+            //add new row and values to table
+            rs.moveToInsertRow();
+            rs.updateString("aid", aid);
+            rs.updateString("atype", ad.getAtype());
+            rs.updateString("title", ad.getTitle());
+            rs.updateInt("price", ad.getPrice().intValue());
+            rs.updateString("descr", ad.getDescr());
+            rs.updateString("location", ad.getLocation());
+            rs.updateDate("pdate", sqlDate);
+            rs.updateString("cat", ad.getCat());
+            rs.updateString("poster", username);
+            rs.insertRow();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+    
+    /*
      * Generates a random number in the range of 0-9999 and converts it to a string
      * 
      * TODO: move to utils package
