@@ -6,6 +6,7 @@ import MiniProject1.Ad;
 import MiniProject1.DBConnector;
 import MiniProject1.Offer;
 import MiniProject1.Review;
+import MiniProject1.User;
 
 
 /* TODO LIST:::::
@@ -15,17 +16,15 @@ import MiniProject1.Review;
  *          TODO: name search
  *                  TODO: list review texts
  *          TODO: write reviews
- * TODO: 4. post an ad
  * TODO: The Design Document
  * 
  * Medium Priority:
  * TODO: 2. clarify "My system should keep a record"
  * TODO: Havent been chopping all inputs.. maybe katherine will do this
+ * TODO: Categories from the categories table!!! getCategories()
  * 
  * Low Priority:
  * TODO: Superclass Ad
- * TODO: utils package
- * TODO: Make date generator, to utils
  * 
  * 
  */
@@ -198,6 +197,23 @@ public class DBConnectorTests {
             System.out.println("PASS: insertAd() returns success, also check visually");
         } else {
             System.out.println("FAIL: insertAd() had some error or something");
+        }
+        
+        //searchForUserByEmail test
+        User user = db.searchForUserByEmail("Hagrid@hogwarts.com");
+        if (user != null) {
+            System.out.println("PASS: searchForUserByEmail() returned successfully, printing:");
+            System.out.println(user.toString());
+        } else {
+            System.out.println("FAIL: searchForUserByEmail() had some error or something");
+        }
+        
+        //searchForUserByEmail wrong user test
+        user = db.searchForUserByEmail("jasneiwsk@email.com");
+        if (user == null) {
+            System.out.println("PASS: searchForUserByEmail() returned not found");
+        } else {
+            System.out.println("FAIL: searchForUserByEmail() shouldnt find jasnewski");
         }
         
         // close connection
