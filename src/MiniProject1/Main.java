@@ -26,6 +26,7 @@ import javax.swing.JFrame;
 /*
  * Comment me!
  */
+
 public class Main extends JFrame{
 
 	//private static String jdbcURL = "jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS";  //this is to connect from school
@@ -38,6 +39,8 @@ public class Main extends JFrame{
 
 	JPanel panel = new JPanel();
 
+	static String enteredtext = "a";
+	String[] arr = new String[2];
 
 	public Main() {
 		setSize(800,300);
@@ -85,10 +88,21 @@ public class Main extends JFrame{
 				System.out.print("Username:");//what the button says when clicked.
 
 				Input.Bufferedreader();
-
+				
+				System.out.println(enteredtext);
+				
+				arr[0] = enteredtext;
+				
 				System.out.print("Password:");
 
 				Input.Bufferedreader();
+				
+				System.out.println(enteredtext);
+				
+				arr[1] = enteredtext;
+				
+				System.out.println( db.verifyUser(arr[0], arr[1]));
+				
 			}
 
 		});
@@ -102,6 +116,7 @@ public class Main extends JFrame{
 				System.out.print("Search:");
 
 				Input.Bufferedreader();
+				
 			}
 		});
 
@@ -162,9 +177,10 @@ public class Main extends JFrame{
 	public static class Input {
 
 		public static void Bufferedreader(){
-			BufferedReader brUsername = new BufferedReader(new InputStreamReader(System.in));{
+			BufferedReader brText = new BufferedReader(new InputStreamReader(System.in));{
 				try {
-					String username = brUsername.readLine();
+					 enteredtext = brText.readLine();
+					 
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -176,12 +192,12 @@ public class Main extends JFrame{
 
 	public static void main(String[] args) {
 
-		Main mymain = new Main();
 
 		//Connect to DB
 		db = new DBConnector(jdbcURL, jdbcUserName, jdbcPassword);
 		db.openConnection();
 
+		Main mymain = new Main();
 		//BEGIN DEBUG
 		System.out.println("Connection successful");
 		//END DEBUG
