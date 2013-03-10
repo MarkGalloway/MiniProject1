@@ -490,7 +490,7 @@ public class DBConnector {
      * Takes as argument a username. Queries the database for 
      * the user with the corresponding email/username value. returns
      * a User object which contains name, email, number of ads, average rating
-     * of reviews the user has recieved.
+     * of reviews the user has received.
      * 
      * Returns null if user does not exist
      */
@@ -509,7 +509,7 @@ public class DBConnector {
             ResultSet rs = stmt.executeQuery(query);
             if(rs.next()) {
                 //user found
-                user = new User(rs.getString("email").trim(), rs.getString("name").trim(), 
+                user = new User(rs.getString("name").trim(), rs.getString("email").trim(), 
                                 rs.getInt("count"), rs.getDouble("avg")
                                );
             } else {
@@ -522,6 +522,44 @@ public class DBConnector {
             return null;
         }
         return user;
+    }
+    
+    /*
+     * Takes as input a String name. Queries the database for 
+     * the user(s) with the corresponding name value. returns
+     * an ArrayList of User objects that return from the query 
+     * each of which contains name, email, number of ads, average rating
+     * of reviews the user has received
+     * 
+     * Returns empty list if user is not found.
+     * Returns null on error.
+     */
+    public ArrayList<User> searchForUserByName(String name) {
+        ArrayList<User> users = new ArrayList<User>();
+        
+        //input length and SQLstring conversion
+        String usr = "'" + Utils.stringChop(name,20) + "'";
+        
+        String query = "select name, email, COUNT(distinct aid) as count, AVG(rating) as avg" + 
+                " from users left outer join ads on email=poster" +
+                " left outer join reviews on poster = reviewee" +
+                " where name = " + usr + "group by email, name";
+        
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()) {
+                //add each user to the return list
+                users.add( new User(rs.getString("name").trim(), rs.getString("email").trim(), 
+                                    rs.getInt("count"), rs.getDouble("avg")
+                                   )
+                         );
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        //return the users
+        return users;
     }
     
     public String getJdbcURL() {

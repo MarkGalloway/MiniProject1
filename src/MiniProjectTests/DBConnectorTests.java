@@ -12,9 +12,6 @@ import MiniProject1.User;
 /* TODO LIST:::::
  * 
  * High priority:
- * TODO: 3. search for users
- *          TODO: name search
- *                  TODO: list review texts
  *          TODO: write reviews
  * TODO: The Design Document
  * 
@@ -216,6 +213,26 @@ public class DBConnectorTests {
             System.out.println("FAIL: searchForUserByEmail() shouldnt find jasnewski");
         }
         
+        //searchForUserByName test
+        ArrayList<User> users = db.searchForUserByName("Rubeus Hagred");
+        if(users != null) {
+            System.out.println("PASS: searchForUserByName() returned successfully, printing:");
+            for(User u: users) {
+                System.out.println(u.toString());
+            }
+        } else {
+            System.out.println("FAIL: searchForUserByName() had some error or something");
+        }
+        //searchForUserByEmail wrong user test
+        users = db.searchForUserByName("jasneiwsk");
+        if (users.isEmpty()) {
+            System.out.println("PASS: searchForUserByName() returned empty (not found)");
+        } else {
+            System.out.println("FAIL: searchForUserByName() shouldnt find jasnewski");
+        }
+        
+        
+        
         // close connection
         rval = db.closeConnection();
         if(rval) {
@@ -307,7 +324,7 @@ public class DBConnectorTests {
             System.exit(-1);
         }
     }
-    
+
     /*
      * inserts test data
      */
@@ -325,6 +342,7 @@ public class DBConnectorTests {
             db.stmt.executeUpdate("insert into users values ('davood@ujiji.com','Davood Teacher', '3333', SYSDATE-1)");
             db.stmt.executeUpdate("insert into users values ('adam@sport.com','Adam Fan', '4444', SYSDATE-1)");
             db.stmt.executeUpdate("insert into users values ('Hagrid@hogwarts.com','Rubeus Hagred', '1212', SYSDATE-1)");
+            db.stmt.executeUpdate("insert into users values ('imposter@email.com','Rubeus Hagred', '6666', SYSDATE-1)");
             db.stmt.executeUpdate("insert into users values ('vlad04@ujiji.com','Vladimir Lenin', '1917', SYSDATE-1)");
             db.stmt.executeUpdate("insert into users values ('bombardier@ujiji.com','Joseph Bombardier', '0123', SYSDATE-1)");
             db.stmt.executeUpdate("insert into users values ('H0ckeyg1rl@ujiji.com','Stacey Smyth', '1235', SYSDATE-1)");
