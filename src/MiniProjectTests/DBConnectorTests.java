@@ -131,18 +131,21 @@ public class DBConnectorTests {
             System.out.println(a.toStringListOwnAds());
         }
         System.out.println("DONE: Hagrids ads");
-        ads = db.listOwnAds("divorcee42@ujiji.com");
-        for (Ad a : ads) {
-            System.out.println(a.toStringListOwnAds());
-        }
-        System.out.println("DONE: divorcee's ads");
         ads = db.listOwnAds("mgallowa@email.com");
         for (Ad a : ads) {
             System.out.println(a.toStringListOwnAds());
         }
         System.out.println("DONE: marks ads");
+        ads = db.listOwnAds("divorcee42@ujiji.com");
+        for (Ad a : ads) {
+            System.out.println(a.toStringListOwnAds());
+        }
+        System.out.println("DONE: divorcee's ads");
         System.out.println("DONE: listOwnAds() tests, check visually");
         
+        //delete ad test
+        db.deleteAd(ads.get(1));
+        System.out.println("DONE: deleteAd() tests, check visually");
         
         // close connection
         db.closeConnection();

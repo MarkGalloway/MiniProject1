@@ -326,6 +326,43 @@ public class DBConnector {
         return ads;
     }
     
+    /*
+     * 
+     */
+    public boolean deleteAd(Ad ad) {
+        String aid = ad.getAid();
+        aid = "'" + aid +"'";
+        
+        //query to find the purchase
+        String query1 = "select pur_id" +
+        		      " from purchases" +
+                      " where aid =" + aid;
+        //query to find the ad
+        String query2 = "select aid" +
+                " from ads" +
+                " where aid =" + aid;
+        try {
+            //find the purchase
+            ResultSet rs = stmt.executeQuery(query1);
+            //if query returned a purchase
+            if(rs.next()) {
+                //delete purchase
+                rs.absolute(1);
+                rs.deleteRow();
+            }
+            //get the ad
+            rs = stmt.executeQuery(query2);
+            //delete the ad
+            rs.absolute(1);
+            rs.deleteRow();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        //success
+        return true;
+    }
     
     /*
      * Takes an input string and a max.
