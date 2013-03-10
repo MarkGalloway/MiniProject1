@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Random;
 
 /*
  * 
@@ -36,9 +37,10 @@ public class DBConnector {
     }
     
     /*
-     * Opens a connection to the Oracle DB
+     * Opens a connection to the Oracle DB.
+     * Returns true on success.
      */
-    public void openConnection() {
+    public boolean openConnection() {
         
         if (connection != null) {
             closeConnection();
@@ -55,20 +57,25 @@ public class DBConnector {
         }
         catch (Exception e){
             System.out.println(e.getMessage());
+            return false;
         }
+        return true;
     }
     
     /*
-     * Closes the connection to the Oracle DB
+     * Closes the connection to the Oracle DB.
+     * Returns true on success.
      */
-    public void closeConnection() {
+    public boolean closeConnection() {
         try {
             //close the connection
             connection.close();
             stmt.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return false;
         }
+        return true;
     }
     
     /*
@@ -109,16 +116,16 @@ public class DBConnector {
      * Updates the login_date of the user specified in 'username'
      * to the current system date.
      * 
-     * TODO: Error checks or return value?? Not sure if needed
+     * Returns True on success
      * 
      */
-    public void updateLoginDate(String username){
+    public boolean updateLoginDate(String username){
         
         //input length conversion
-        String usr = stringChop(username,20);
+        String usr = "'" + stringChop(username,20) + "'";
         
         //the query to be passed in
-        String query = "Select email,last_login from users where email = " + "'" + usr +"'";
+        String query = "Select email,last_login from users where email = " + usr ;
         
         //the new current date
         java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
@@ -134,8 +141,9 @@ public class DBConnector {
             rs.updateRow();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return false;
         }
-        
+        return true;
     }
     
     /*
@@ -203,8 +211,6 @@ public class DBConnector {
     /*
      * Adds a new user to the Users table.
      * 
-     * TODO: Verify correct input ??
-     * 
      * returns true if user added successfully
      * returns false if user already exists
      * 
@@ -241,11 +247,10 @@ public class DBConnector {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
         return true;
     }
     
-    /* TODO: Assumed case-insensitivity. Not clear in spec.
+    /* Assumed case-insensitivity. Not clear in spec.
      * 
      * Takes as argument some keywords. Launches an SQL query which searches for 
      * each keyword find rows in the ads table which have a the keyword in either title or descr.
@@ -299,7 +304,7 @@ public class DBConnector {
      * the relevant data: aid, atype, title, price, pdate, and ldate.
      * ldate is the number of days remaining on any purchased offers.
      */
-    public ArrayList<Ad> listOwnAds(String username) {
+    public ArrayList<Ad> getOwnAds(String username) {
         //return value holder
         ArrayList<Ad> ads = new ArrayList<Ad>();
         
@@ -329,7 +334,7 @@ public class DBConnector {
     /*
      * Takes as argument an Ad object. Launches 2 queries to the database.
      * The first query is to find if the Ad has any purchased offers. If yes,
-     * the purchased offers aere deleted from the database. Then, the ad itself
+     * the purchased offers are deleted from the database. Then, the ad itself
      * is queried for and deleted from the database
      */
     public boolean deleteAd(Ad ad) {
@@ -365,6 +370,80 @@ public class DBConnector {
         }
         //success
         return true;
+    }
+    
+    /*
+     * Searches the Database for the available offers and records them into
+     * Offers objects, returning an ArrayList of Offers objects containing all the offers.
+     * 
+     */
+    public ArrayList<Offer> getOffers() {
+        ArrayList<Offer> offers = new ArrayList<Offer>();
+        //query to get the offers
+        String query = "select * from offers";
+        
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            //store the offers into the ArrayList
+            while(rs.next()) {
+                offers.add(new Offer(rs.getString("ono"), rs.getInt("ndays"), rs.getFloat("price")));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        //return the offers
+        return offers;
+    }
+    
+    /*
+     * Takes as arguments an Ad object and an Offer object.
+     * Generates unique pur_id and the current date.
+     * Inserts a row into purchases containing the Ads aid, Offers ono, 
+     * the new date, and the random unique pur_id. 
+     * 
+     * Returns true on success.
+     */
+    public boolean promoteAd(Ad ad, Offer offer) {
+        //random new (possibly) Unique ID
+        String pur_id = generateRandom();
+        //the new current date
+        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+        
+        String query1 = "Select pur_id from purchases where pur_id = " + "'" + pur_id + "'";
+        String query2 = "Select pur_id, start_date, aid, ono from purchases";
+        
+        ResultSet rs;
+        try {
+            //keep generating new random ID until we have a unique one
+            rs = stmt.executeQuery(query1);
+            while(rs.next()) {
+                //query returned a match, id already exists
+                pur_id = generateRandom();
+                rs = stmt.executeQuery(query1);
+            }
+            //get the table
+            rs = stmt.executeQuery(query2);
+            //add new row and values to table
+            rs.moveToInsertRow();
+            rs.updateString("pur_id", pur_id);
+            rs.updateDate("start_date", sqlDate);
+            rs.updateString("aid", ad.getAid());
+            rs.updateString("ono", offer.getOno());
+            rs.insertRow();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+    
+    /*
+     * Generates a random number in the range of 0-9999 and converts it to a string
+     * 
+     * TODO: move to utils package
+     */
+    public String generateRandom() {
+        return String.valueOf((new Random()).nextInt(10000));
     }
     
     /*
