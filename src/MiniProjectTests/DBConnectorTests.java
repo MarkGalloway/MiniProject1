@@ -7,8 +7,6 @@ import MiniProject1.Ad;
 import MiniProject1.DBConnector;
 import MiniProject1.Review;
 
-//vhsbdivubeujnwoivskbvmsd
-///vkjsbdviubseogindvm
 
 /*
  * ssh -L 1525:gwynne.cs.ualberta.ca:1521 mgallowa@ohaton.cs.ualberta.ca
@@ -144,8 +142,14 @@ public class DBConnectorTests {
         System.out.println("DONE: listOwnAds() tests, check visually");
         
         //delete ad test
-        db.deleteAd(ads.get(1));
-        System.out.println("DONE: deleteAd() tests, check visually");
+        rval = db.deleteAd(ads.get(1));
+        if(rval) {
+            System.out.println("PASS: deleteAd() returns success, also check visually");
+        } else {
+            System.out.println("FAIL: deleteAd() returned failure");
+        }
+        
+        
         
         // close connection
         db.closeConnection();

@@ -305,7 +305,7 @@ public class DBConnector {
         
         //convert username
         String usr = "'" + stringChop(username,20) + "'";
-        
+        //auery to return all ads which have been posted by the username and the time left on purchased offers (if any)
         String query = "select A.aid, atype, title, A.price, pdate, round(ndays - (sysdate - start_date)) as ldate" +
         		      " from ads A left outer join purchases P on A.aid=P.aid left outer join offers O on P.ono=O.ono" +
         		      " where poster = " + usr;
@@ -327,7 +327,10 @@ public class DBConnector {
     }
     
     /*
-     * 
+     * Takes as argument an Ad object. Launches 2 queries to the database.
+     * The first query is to find if the Ad has any purchased offers. If yes,
+     * the purchased offers aere deleted from the database. Then, the ad itself
+     * is queried for and deleted from the database
      */
     public boolean deleteAd(Ad ad) {
         String aid = ad.getAid();
