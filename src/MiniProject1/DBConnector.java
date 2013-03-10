@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Random;
 
 /*
  * 
@@ -81,13 +80,15 @@ public class DBConnector {
     /*
      * Takes as input a 'username' and returns an ArrayList of the Reviews corresponding 'username' which have been written 
      * since his/her last login, ordered based on date with more recent reviews listed first.
+     * 
+     * Returns null on failure
      */
     public ArrayList<Review> getReviews(String username) {
         //to hold return values
         ArrayList<Review> reviews = new ArrayList<Review>();
         
         //input length and sql string conversion
-        String usr = "'" + stringChop(username,20)  + "'";
+        String usr = "'" + Utils.stringChop(username,20)  + "'";
         
         //query to get the users reviews which are new since last login
         String query = "select *" +
@@ -107,6 +108,7 @@ public class DBConnector {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
 
         return reviews;
@@ -122,13 +124,10 @@ public class DBConnector {
     public boolean updateLoginDate(String username){
         
         //input length conversion
-        String usr = "'" + stringChop(username,20) + "'";
+        String usr = "'" + Utils.stringChop(username,20) + "'";
         
         //the query to be passed in
         String query = "Select email,last_login from users where email = " + usr ;
-        
-        //the new current date
-        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
         
         try {
             //get the resultset from query
@@ -136,7 +135,7 @@ public class DBConnector {
             //move to the row
             rs.absolute(1);
             //update the date
-            rs.updateDate("last_login", sqlDate);
+            rs.updateDate("last_login", Utils.generateDate());
             //update the change in the database
             rs.updateRow();
         } catch (SQLException e) {
@@ -155,8 +154,8 @@ public class DBConnector {
     public boolean verifyUser(String username, String password) {
         
         //input length and SQLstring conversion
-        String usr = "'" + stringChop(username,20) + "'";
-        String pwd = "'" + stringChop(password,4) + "'";
+        String usr = "'" + Utils.stringChop(username,20) + "'";
+        String pwd = "'" + Utils.stringChop(password,4) + "'";
         
         //query to get all users
         String query ="select email,pwd from users" +
@@ -187,7 +186,7 @@ public class DBConnector {
     public boolean existsUser(String username) {
         
         //input length conversion
-        String usr = "'" + stringChop(username,20) + "'";
+        String usr = "'" + Utils.stringChop(username,20) + "'";
         
         //query to select primary key of all users
         String query ="select email from users where email = " + usr;
@@ -218,9 +217,9 @@ public class DBConnector {
     public boolean addNewUser(String username, String nameString, String password) {        
         
         //input length conversion
-        String usr = stringChop(username,20);
-        String pwd = stringChop(password,4);
-        String name = stringChop(nameString,20);
+        String usr = Utils.stringChop(username,20);
+        String pwd = Utils.stringChop(password,4);
+        String name = Utils.stringChop(nameString,20);
         
         //if user already exists, then reject.
         if(existsUser(usr)) {
@@ -293,6 +292,7 @@ public class DBConnector {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
         //return the matching ads
         return ads;
@@ -303,13 +303,15 @@ public class DBConnector {
      * ads which have been posted by that username. Returns an Ad object containing
      * the relevant data: aid, atype, title, price, pdate, and ldate.
      * ldate is the number of days remaining on any purchased offers.
+     * 
+     * returns null on error
      */
     public ArrayList<Ad> getOwnAds(String username) {
         //return value holder
         ArrayList<Ad> ads = new ArrayList<Ad>();
         
         //convert username
-        String usr = "'" + stringChop(username,20) + "'";
+        String usr = "'" + Utils.stringChop(username,20) + "'";
         //auery to return all ads which have been posted by the username and the time left on purchased offers (if any)
         String query = "select A.aid, atype, title, A.price, pdate, round(ndays - (sysdate - start_date)) as ldate" +
         		      " from ads A left outer join purchases P on A.aid=P.aid left outer join offers O on P.ono=O.ono" +
@@ -326,6 +328,7 @@ public class DBConnector {
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
         //return the matching ads
         return ads;
@@ -376,6 +379,7 @@ public class DBConnector {
      * Searches the Database for the available offers and records them into
      * Offers objects, returning an ArrayList of Offers objects containing all the offers.
      * 
+     * returns null on error
      */
     public ArrayList<Offer> getOffers() {
         ArrayList<Offer> offers = new ArrayList<Offer>();
@@ -386,10 +390,11 @@ public class DBConnector {
             ResultSet rs = stmt.executeQuery(query);
             //store the offers into the ArrayList
             while(rs.next()) {
-                offers.add(new Offer(rs.getString("ono"), rs.getInt("ndays"), rs.getFloat("price")));
+                offers.add(new Offer(rs.getString("ono").trim(), rs.getInt("ndays"), rs.getFloat("price")));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return null;
         }
         //return the offers
         return offers;
@@ -405,9 +410,7 @@ public class DBConnector {
      */
     public boolean promoteAd(Ad ad, Offer offer) {
         //random new (possibly) Unique ID
-        String pur_id = generateRandom();
-        //the new current date
-        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+        String pur_id = Utils.generateRandom();
         
         String query1 = "Select pur_id from purchases where pur_id = " + "'" + pur_id + "'";
         String query2 = "Select pur_id, start_date, aid, ono from purchases";
@@ -418,7 +421,7 @@ public class DBConnector {
             rs = stmt.executeQuery(query1);
             while(rs.next()) {
                 //query returned a match, id already exists
-                pur_id = generateRandom();
+                pur_id = Utils.generateRandom();
                 rs = stmt.executeQuery(query1);
             }
             //get the table
@@ -426,7 +429,7 @@ public class DBConnector {
             //add new row and values to table
             rs.moveToInsertRow();
             rs.updateString("pur_id", pur_id);
-            rs.updateDate("start_date", sqlDate);
+            rs.updateDate("start_date", Utils.generateDate());
             rs.updateString("aid", ad.getAid());
             rs.updateString("ono", offer.getOno());
             rs.insertRow();
@@ -441,16 +444,14 @@ public class DBConnector {
      * Takes as arguments an Ad object and a username string. Generates a
      * unique id and the current date. Uses the unique id, current date,
      * username string, and the values stored in the Ad object to create
-     * a new row in the ads table correspondign to the values contained in
+     * a new row in the ads table corresponding to the values contained in
      * the arguments.
      * 
      * Returns true on success
      */
     public boolean insertAd(Ad ad, String username) {
         //random new (possibly) Unique ID
-        String aid = generateRandom();
-        //the new current date
-        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+        String aid = Utils.generateRandom();
         
         String query1 = "Select aid from ads where aid = " + "'" + aid + "'";
         String query2 = "Select aid, atype, title, price, descr, location, pdate, cat, poster from ads";
@@ -461,7 +462,7 @@ public class DBConnector {
             rs = stmt.executeQuery(query1);
             while(rs.next()) {
                 //query returned a match, id already exists
-                aid = generateRandom();
+                aid = Utils.generateRandom();
                 rs = stmt.executeQuery(query1);
             }
             //get the table
@@ -474,7 +475,7 @@ public class DBConnector {
             rs.updateInt("price", ad.getPrice().intValue());
             rs.updateString("descr", ad.getDescr());
             rs.updateString("location", ad.getLocation());
-            rs.updateDate("pdate", sqlDate);
+            rs.updateDate("pdate", Utils.generateDate());
             rs.updateString("cat", ad.getCat());
             rs.updateString("poster", username);
             rs.insertRow();
@@ -486,28 +487,41 @@ public class DBConnector {
     }
     
     /*
-     * Generates a random number in the range of 0-9999 and converts it to a string
+     * Takes as argument a username. Queries the database for 
+     * the user with the corresponding email/username value. returns
+     * a User object which contains name, email, number of ads, average rating
+     * of reviews the user has recieved.
      * 
-     * TODO: move to utils package
+     * Returns null if user does not exist
      */
-    public String generateRandom() {
-        return String.valueOf((new Random()).nextInt(10000));
-    }
-    
-    /*
-     * Takes an input string and a max.
-     * If the string is shorter than max, it is returned.
-     * If the string is longer than max, it is shortened to be
-     * max chars long. Simply cuts off the end of strings that are
-     * too long for the DB.
-     * 
-     * TODO: refactoring: rename this function to something useful
-     * TODO: refactoring: pull method into Utils package
-     */
-    public static String stringChop(String s, int max) {
-        int maxLength = (s.length() < max) ? s.length() 
-                                           : max;
-        return s.substring(0, maxLength);
+    public User searchForUserByEmail(String username) {
+        User user = null;
+        
+        //input length and SQLstring conversion
+        String usr = "'" + Utils.stringChop(username,20) + "'";
+        
+        String query = "select name, email, COUNT(distinct aid) as count, AVG(rating) as avg" + 
+                      " from users left outer join ads on email=poster" +
+                      " left outer join reviews on poster = reviewee" +
+                      " where email = " + usr + "group by email, name";
+        
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            if(rs.next()) {
+                //user found
+                user = new User(rs.getString("email").trim(), rs.getString("name").trim(), 
+                                rs.getInt("count"), rs.getDouble("avg")
+                               );
+            } else {
+                //user not found, does not exist
+                user = null;
+            }
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return user;
     }
     
     public String getJdbcURL() {
