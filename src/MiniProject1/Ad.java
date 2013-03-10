@@ -7,21 +7,37 @@ import java.sql.Date;
  */
 public class Ad {
     
-    private String aid; //Maybe remove, not used (yet)
+    private String aid = null;
     private String atype;
     private String title;
     private Integer price;
-    private String descr;
-    private String location;
+    private String descr = null;
+    private String location = null;
     private Date pdate;
-    private String cat;
-    private String poster;
-    private double avgRating;
+    private String cat = null;
+    private String poster = null;
+    private Double avgRating = null;
+    private Integer daysLeft = null;
     
-    public Ad(String aid, String atype, String title, Integer price, String descr, 
-              String location, Date date, String cat, String poster, double avgRating) {
+    /*
+     * Constructor for own listed Ad
+     */
+    public Ad(String aid, String atype, String title, Integer price, Date date, Integer daysLeft) {
         super();
         this.setAid(aid);
+        this.setAtype(atype);
+        this.setTitle(title);
+        this.setPrice(price);
+        this.setPdate(date);
+        this.setDaysLeft(daysLeft);
+    }
+    
+    /*
+     * Constructor for a keyword searched ad
+     */
+    public Ad(String atype, String title, Integer price, String descr, 
+              String location, Date date, String cat, String poster, Double avgRating) {
+        super();
         this.setAtype(atype);
         this.setTitle(title);
         this.setPrice(price);
@@ -33,10 +49,18 @@ public class Ad {
         this.setAvgRating(avgRating);
     }
     
+    public String toStringListOwnAds() {
+        String s = "Ad Type: " + this.getAtype() + ", Title: " + this.getTitle() + ", Price: " + this.getPrice() + ", Posting Date: " + this.getPdate();
+        if(this.getDaysLeft() != 0) {
+            s = s + ", Days Left Until Promotion Ends: " + this.getDaysLeft();
+        }
+        return s;
+    }
+    
     /*
      * Returns a string containing a printable version of the Ad Type, Title, Price, and Posting Date of an Ad.
      */
-    public String toStringListing() {
+    public String toStringKeywordSearch() {
         return "Ad Type: " + this.getAtype() + ", Title: " + this.getTitle() + ", Price: " + this.getPrice() + ", Posting Date: " + this.getPdate();
     }
     
@@ -46,15 +70,15 @@ public class Ad {
      * 
      * If the user has no ratings, will print none instead of 0 (since 0 is misleading)
      */
-    public String toStringDetails() {
+    public String toStringKeywordSearchAdvanced() {
         
-        String s = ((int)this.getAvgRating() == 0)? "none": String.valueOf(((double)((int)(this.getAvgRating() * 10))) / 10);
+        String s = (this.getAvgRating().intValue() == 0)? "none": String.valueOf(((double)((int)(this.getAvgRating() * 10))) / 10);
         
         return "Description: " + this.getDescr() + ", Location: " + this.getLocation() + ", Ad Category: " + this.getCat() + 
                ", Poster: " + this.getPoster() + ", Posters Average Rating: " + s;
     }
 
-    private String getAid() {
+    public String getAid() {
         return aid;
     }
 
@@ -126,11 +150,19 @@ public class Ad {
         this.poster = poster;
     }
 
-    private double getAvgRating() {
+    private Double getAvgRating() {
         return avgRating;
     }
 
-    private void setAvgRating(double avgRating) {
+    private void setAvgRating(Double avgRating) {
         this.avgRating = avgRating;
+    }
+
+    private Integer getDaysLeft() {
+        return daysLeft;
+    }
+
+    private void setDaysLeft(Integer daysLeft) {
+        this.daysLeft = daysLeft;
     }
 }
