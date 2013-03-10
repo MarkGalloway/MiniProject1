@@ -81,14 +81,14 @@ public class Ad {
      * Returns a string containing a printable version of the Description, Location, Ad Category, Poster, 
      * and Posters Avg Rating(to one decimal place) of an Ad
      * 
-     * If the user has no ratings, will print none instead of 0 (since 0 is misleading)
+     * If the user has no ratings, no rating info is printed
      */
     public String toStringKeywordSearchAdvanced() {
         
-        String s = (this.getAvgRating().intValue() == 0)? "none": String.valueOf(((double)((int)(this.getAvgRating() * 10))) / 10);
+        String s = (this.getAvgRating().intValue() == 0)? "": ", Posters Average Rating: " + String.valueOf(((double)((int)(this.getAvgRating() * 10))) / 10);
         
         return "Description: " + this.getDescr() + ", Location: " + this.getLocation() + ", Ad Category: " + this.getCat() + 
-               ", Poster: " + this.getPoster() + ", Posters Average Rating: " + s;
+               ", Poster: " + this.getPoster() +  s;
     }
 
     public String getAid() {
