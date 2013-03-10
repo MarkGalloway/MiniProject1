@@ -9,6 +9,23 @@ import MiniProject1.Review;
 
 
 /*
+ * TODO: 2. add promotion
+ *          TODO: generate unqiue pur_id
+ *          TODO: clarify "My system should keep a record"
+ * TODO: 3. search for users
+ *          TODO: name search
+ *                  TODO: list review texts
+ *                      TODO: generate unique ID again
+ *          TODO: write reviews
+ * TODO: 4. post an ad
+ *          TODO: generate unique_aid
+ * TODO: Superclass Ad
+ * 
+ * 
+ */
+
+
+/*
  * ssh -L 1525:gwynne.cs.ualberta.ca:1521 mgallowa@ohaton.cs.ualberta.ca
  */
 
