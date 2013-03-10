@@ -247,37 +247,47 @@ public class DBConnector {
     
     /* TODO: Assumed case-insensitivity. Not clear in spec.
      * 
-     * Takes as argument some keywords. Launches an SQL query for each keyword to
-     * find rows in the ads table which have a the keyword in either title or descr.
+     * Takes as argument some keywords. Launches an SQL query which searches for 
+     * each keyword find rows in the ads table which have a the keyword in either title or descr.
      * 
      * Returns all found rows as Ad objects in an ArrayList
      */
     public ArrayList<Ad> keywordSearch(ArrayList<String> keywords) {
         //return values holder
         ArrayList<Ad> ads = new ArrayList<Ad>();
-        String query;
-        ResultSet rs;
         
-        //loops through each keyword, querying the keyword for matching ads
-        for (String s : keywords) {
-            query = "select aid, atype, title, price, descr, location, pdate, cat, poster, AVG(rating) as avg" +
-                   " from ads left outer join reviews on poster = reviewee" +
-                   " where (lower(title) LIKE '%" + s.toLowerCase() + "%'" +" or lower(descr) LIKE '%" + s.toLowerCase() + "%')" +
-                   " group by aid, atype, title, price, descr, location, pdate, cat, poster" +
-                   " order by pdate DESC";
-            try {
-                rs = stmt.executeQuery(query);
-                //converts each result to an Ad datatype
-                while(rs.next()) {
-                    ads.add(new Ad(rs.getString("aid").trim(), rs.getString("atype").trim(), rs.getString("title").trim(), rs.getInt("price"), 
-                                   rs.getString("descr").trim(), rs.getString("location").trim(), rs.getDate("pdate"), rs.getString("cat").trim(),
-                                   rs.getString("poster").trim(), rs.getDouble("avg")
-                                  )
-                           );
-                }
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+        //Return nothing if given nothing. not sure if this is necessary
+        if (keywords.isEmpty()) {
+            return ads;
+        }
+        
+        //build the beginning of the query
+        String query = "select aid, atype, title, price, descr, location, pdate, cat, poster, AVG(rating) as avg" +
+                " from ads left outer join reviews on poster = reviewee" +
+                " where (lower(title) LIKE '%" + keywords.get(0).toLowerCase() + "%'" + 
+                " or lower(descr) LIKE '%" + keywords.get(0).toLowerCase() + "%')";
+        
+        //Dynamically add each keyword to the where clause of the query.
+        for (int i = 1; i < keywords.size(); i++) {
+            query = query + " or (lower(title) LIKE '%" + keywords.get(i).toLowerCase() + "%'" + 
+                            " or lower(descr) LIKE '%" + keywords.get(i).toLowerCase() + "%')";
+        }
+
+        //attach the end of the query
+        query = query + " group by aid, atype, title, price, descr, location, pdate, cat, poster" +
+                        " order by pdate DESC";
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            //converts each result to an Ad datatype
+            while(rs.next()) {
+                ads.add(new Ad(rs.getString("aid").trim(), rs.getString("atype").trim(), rs.getString("title").trim(), rs.getInt("price"), 
+                               rs.getString("descr").trim(), rs.getString("location").trim(), rs.getDate("pdate"), rs.getString("cat").trim(),
+                               rs.getString("poster").trim(), rs.getDouble("avg")
+                              )
+                       );
             }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
         //return the matching ads
         return ads;

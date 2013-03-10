@@ -172,6 +172,7 @@ public class DBConnectorTests {
         //Keyword Search tests
         ArrayList<String> keywords = new ArrayList<String>();
         keywords.add("snowmobile");
+        keywords.add("camera");
         ArrayList<Ad> ads = db.keywordSearch(keywords);
         
         for (Ad a : ads) {
