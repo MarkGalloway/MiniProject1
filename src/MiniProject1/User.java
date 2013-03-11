@@ -1,11 +1,18 @@
 package MiniProject1;
 
+/*
+ * A data storage class which contains the fields of a
+ * User object corresponding to a row in the users table in the database
+ */
 public class User {
     private String name;
     private String email;
     private Integer numberOfAds;
     private Double avgRating;
     
+    /*
+     * Constructs a User object 
+     */
     public User(String name, String email, Integer numberOfAds, Double avgRating) {
         super();
         this.setName(name);
@@ -14,6 +21,9 @@ public class User {
         this.setAvgRating(avgRating);
     }
 
+    /*
+     * Prints the string representation of a User object
+     */
     public String toString() {
         
         String s = (this.getAvgRating().intValue() == 0)? "": ", Users Average Rating: " + String.valueOf(((double)((int)(this.getAvgRating() * 10))) / 10);

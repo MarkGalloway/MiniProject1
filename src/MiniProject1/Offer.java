@@ -1,11 +1,18 @@
 package MiniProject1;
 
+/*
+ * A data storage class which contains the fields of an
+ * Offer object corresponding to a row in the offers table in the database
+ */
 public class Offer {
 
     private String Ono;
     private Integer ndays;
     private Float price;
     
+    /*
+     * Constructor to make an Offer object
+     */
     public Offer(String Ono, Integer ndays, Float price) {
         super();
         this.setOno(Ono);
@@ -13,6 +20,9 @@ public class Offer {
         this.setPrice(price);
     }
     
+    /*
+     * Prints the string representation of the object
+     */
     public String toString() {
         return "Number of Days: " + this.getNdays() + ", Price: "+ this.getPrice();
     }

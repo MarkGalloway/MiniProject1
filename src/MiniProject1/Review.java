@@ -3,7 +3,8 @@ package MiniProject1;
 import java.sql.Date;
 
 /*
- * Comment me!!!!!!!!
+ * A data storage class which contains the fields of a
+ * Review object corresponding to a row in the reviews table in the database
  */
 public class Review {
 
@@ -25,7 +26,7 @@ public class Review {
     }
     
     /*
-     * Constructor for a review got off the Database
+     * Constructor for a review got off the Database (has a date field)
      */
     public Review(Integer rating, String text, String reviewer, String reviewee, Date rdate) {
         super();
@@ -36,10 +37,12 @@ public class Review {
         this.setRdate(rdate);
     }
 
+    //String representation with only 40 chars of review text
     public String toStringListing() {
         return "Review Date: " + this.getRdate() +", Rating: " + this.getRating() +", Review Text(40 chars): " + Utils.stringChop(this.getText(), 40);
     }
     
+    //String representation of the full review text
     public String toStringFullText() {
         return "Full Review Text: " + this.getText();
     }

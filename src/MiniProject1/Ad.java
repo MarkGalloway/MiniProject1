@@ -3,7 +3,8 @@ package MiniProject1;
 import java.sql.Date;
 
 /*
- * COMMENT ME!
+ * A data storage class which contains the fields of an
+ * Ad object corresponding to a row in the ads table in the database
  */
 public class Ad {
     
