@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Handles the nitty gritty syntax of interacting with the DB
  * so we don't need try/catch all over the place in the UI loop
  */
-public class DBConnector {
+public class DBHandler {
 
     private static String mDriverName = "oracle.jdbc.driver.OracleDriver";
     private static Class drvClass = null;
@@ -29,7 +29,7 @@ public class DBConnector {
      * Constructor. Creates a DB object with the 
      * specified URl, username, and password
      */
-    public DBConnector(String URL, String uname, String pwd ) {
+    public DBHandler(String URL, String uname, String pwd ) {
         super();
         this.setJdbcUserName(uname);
         this.setJdbcPassword(pwd);
