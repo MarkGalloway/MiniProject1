@@ -7,16 +7,28 @@ import java.sql.Date;
  */
 public class Review {
 
-    private Integer rno; //remove?
     private Integer rating;
     private String text;
-    private String reviewer; //remove?
-    private String reviewee; // remove?
+    private String reviewer;
+    private String reviewee;
     private Date rdate;
     
-    public Review(Integer rno, Integer rating, String text, String reviewer, String reviewee, Date rdate) {
+    /*
+     * Constructor for creating a new review (no date field)
+     */
+    public Review(Integer rating, String text, String reviewer, String reviewee) {
         super();
-        this.setRno(rno);
+        this.setRating(rating);
+        this.setText(text);
+        this.setReviewer(reviewer);
+        this.setReviewee(reviewee);
+    }
+    
+    /*
+     * Constructor for a review got of the Database
+     */
+    public Review(Integer rating, String text, String reviewer, String reviewee, Date rdate) {
+        super();
         this.setRating(rating);
         this.setText(text);
         this.setReviewer(reviewer);
@@ -30,14 +42,6 @@ public class Review {
     
     public String toStringFullText() {
         return "Full Review Text: " + this.getText();
-    }
-    
-    public Integer getRno() {
-        return rno;
-    }
-
-    public void setRno(Integer rno) {
-        this.rno = rno;
     }
 
     public Integer getRating() {
