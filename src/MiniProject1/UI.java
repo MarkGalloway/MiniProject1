@@ -22,7 +22,6 @@ public class UI {
      * Launches the main dialog execution of the text based UI
      */
     public static void main(String[] args) {
-        
         /*
          * variable declarations 
          */
@@ -828,6 +827,8 @@ public class UI {
             response = in.nextLine().trim();
             if(response.length() > 4) {
                 System.out.println("That's longer than 4 chars!");
+            } else if(response.equalsIgnoreCase("")) {
+                System.out.println("field cannot be empty!");
             } else {
                 break;
             }
@@ -872,7 +873,12 @@ public class UI {
             response = in.nextLine().trim();
             try {
                 int index = Integer.parseInt(response);
-                rval = index;
+                if(index >= 0) {
+                    rval = index;
+                } else {
+                    System.out.println("Price cannot be negative");
+                    continue;
+                }
             }  catch (NumberFormatException nFE) {
                 //User entered a non-Integer
                 System.out.print("Input not recognized. Try again");
@@ -892,6 +898,8 @@ public class UI {
             response = in.nextLine().trim();
             if(response.length() > 15) {
                 System.out.println("That's longer than 15 chars!");
+            } else if(response.equalsIgnoreCase("")) {
+                System.out.println("field cannot be empty!");
             } else {
                 break;
             }
@@ -926,6 +934,8 @@ public class UI {
             response = in.nextLine().trim();
             if(response.length() > 50) {
                 System.out.println("That's longer than 50 chars!");
+            } else if(response.equalsIgnoreCase("")) {
+                System.out.println("field cannot be empty!");
             } else {
                 break;
             }
@@ -943,6 +953,8 @@ public class UI {
             response = in.nextLine().trim();
             if(response.length() > 20) {
                 System.out.println("That's longer than 20 chars!");
+            } else if(response.equalsIgnoreCase("")) {
+                System.out.println("field cannot be empty!");
             } else {
                 break;
             }
@@ -960,6 +972,8 @@ public class UI {
             response = in.nextLine().trim();
             if(response.length() > 20) {
                 System.out.println("That's longer than 20 chars!");
+            } else if(response.equalsIgnoreCase("")) {
+                System.out.println("field cannot be empty!");
             } else {
                 break;
             }
@@ -977,6 +991,8 @@ public class UI {
             response = in.nextLine().trim();
             if(response.length() > 20) {
                 System.out.println("That's longer than 20 chars!");
+            } else if(response.equalsIgnoreCase("")) {
+                System.out.println("field cannot be empty!");
             } else {
                 break;
             }
@@ -994,6 +1010,8 @@ public class UI {
             response = in.nextLine().trim();
             if(response.length() > 20) {
                 System.out.println("That's longer than 20 chars!");
+            } else if(response.equalsIgnoreCase("")) {
+                System.out.println("field cannot be empty!");
             } else {
                 break;
             }
@@ -1011,6 +1029,8 @@ public class UI {
             response = in.nextLine().trim();
             if(response.length() > 20) {
                 System.out.println("That's longer than 20 chars!");
+            } else if(response.equalsIgnoreCase("")) {
+                System.out.println("field cannot be empty!");
             } else {
                 if(db.existsUser(response)) {
                     System.out.println("That email already has an account. Try a different one.");
