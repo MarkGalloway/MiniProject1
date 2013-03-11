@@ -232,6 +232,13 @@ public class DBConnectorTests {
             System.out.println("FAIL: searchForUserByName() shouldnt find jasnewski");
         }
         
+        //addReview() test
+        rval = db.addReview(new Review(1, "This is a terrible new review", "mgallowa@email.com", "Hagrid@hogwarts.com"));
+        if (users.isEmpty()) {
+            System.out.println("PASS: addReview() returned successfully, check visually");
+        } else {
+            System.out.println("FAIL: addReview() had some sort of error");
+        }
         
         
         // close connection
