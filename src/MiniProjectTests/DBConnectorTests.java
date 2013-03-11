@@ -14,7 +14,6 @@ import MiniProject1.User;
  * High priority:
  * TODO: The Design Document
  * TODO: Comment every Class //TODO: Mega Comments HIGH
- * //HIGH: sanity checks. Email must not be empty string. most categories should not be empty string. FUCK
  * 
  * Low Priority:
  * TODO: Superclass Ad
