@@ -3,6 +3,14 @@ package MiniProject1;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*
+ * This is the main UI interaction class for MiniProject1. It contains the main
+ * loop which controls execution and interaction with the user. it also has many user 
+ * interaction elicitation methods. Furthermore, it also keeps track of databse usernames/password
+ * and the email of the user. 
+ * 
+ * Calls methods in DBHandler in order to access the database for based on user interactions.
+ */
 public class UI {
     private String jdbcURL = "jdbc:oracle:thin:@localhost:1525:CRS"; //TODO fix it   
     private String jdbcUserName;
@@ -42,7 +50,7 @@ public class UI {
         System.out.println("Thanks, connecting you to the database now.");
         
         //get a DB Handler object so we can talk to the database
-        DBConnector db = new DBConnector(ui.jdbcURL, ui.getJdbcUserName(), ui.getJdbcPassword());
+        DBHandler db = new DBHandler(ui.jdbcURL, ui.getJdbcUserName(), ui.getJdbcPassword());
 
         //Connect to the Database
         rval = db.openConnection();
@@ -103,15 +111,15 @@ public class UI {
                 int index = Integer.parseInt(response);
                 //Launch the Function based on input
                 switch(index) {
-                    case 1: ui.searchForAds(db, ui);
+                    case 1: ui.searchForAds(db, ui); //Search for ads funtionality
                             break;
-                    case 2: ui.listOwnAds(db, ui);
+                    case 2: ui.listOwnAds(db, ui); //List my own ads functionality
                             break;
-                    case 3: ui.userSearch(db, ui);
+                    case 3: ui.userSearch(db, ui); //Search for users functionality
                             break;
-                    case 4: ui.postAd(db, ui);
+                    case 4: ui.postAd(db, ui); //Post an ad functionality
                             break;
-                    case 5: db.updateLoginDate(getEmail());
+                    case 5: db.updateLoginDate(getEmail()); //Logout functionality
                             exit(db);
                             break;
                     default: System.out.print("Input not recognized. Try again."); //user entered a bad number
@@ -129,7 +137,7 @@ public class UI {
      * Prompt user to choose an ad to promote.
      * Promotes ad that has not yet been promoted.
      */
-    private void promoteAd(DBConnector db, Ad ad) {
+    private void promoteAd(DBHandler db, Ad ad) {
         if(db.hasPromotion(ad)) {
             System.out.println("Sorry, this ad already has a promotion. Cannot promote further");
             return;
@@ -177,7 +185,7 @@ public class UI {
     /*
      * Propmts user to delete an ad.
      */
-    private void deleteAd(DBConnector db, Ad ad) {
+    private void deleteAd(DBHandler db, Ad ad) {
        boolean rval = db.deleteAd(ad);
        if(rval) {
            System.out.println("Add successfully removed.");
@@ -190,7 +198,7 @@ public class UI {
      * Manages the options of deleting or promoting an
      * ad.
      */
-    private void manageAd(DBConnector db, UI ui, Ad ad) {
+    private void manageAd(DBHandler db, UI ui, Ad ad) {
         while(true) {
             //display the menu
              ui.printManageAdMenu();
@@ -220,7 +228,7 @@ public class UI {
      * asking whether the user wants to display 5 more ads.
      * Gives users the option to promote or delete their ads.
      */
-    private void listOwnAds(DBConnector db, UI ui) {
+    private void listOwnAds(DBHandler db, UI ui) {
         //get the ads
         ArrayList<Ad> ads = db.getOwnAds(UI.getEmail());
         
@@ -298,7 +306,7 @@ public class UI {
     /*
      * Shows reviews made by the users that matches input.
      */
-    private void printUsersReviews(DBConnector db, UI ui, String email) {
+    private void printUsersReviews(DBHandler db, UI ui, String email) {
         
         System.out.println();
         
@@ -320,7 +328,7 @@ public class UI {
     /*
      * Allows user to write a review.
      */
-    private void writeUserReview(DBConnector db, UI ui, String email) {
+    private void writeUserReview(DBHandler db, UI ui, String email) {
         
         Integer rating = elicitRating();
         String text = elicitText();
@@ -336,7 +344,7 @@ public class UI {
     /*
      * Displys a user.
      */
-    private void displayUsers(DBConnector db, UI ui, ArrayList<User> users) {
+    private void displayUsers(DBHandler db, UI ui, ArrayList<User> users) {
         
         //Shouldn't happen, but sanity check
         if( users.isEmpty()) {
@@ -400,7 +408,7 @@ public class UI {
     /*
      * Displays user that matches the email given.
      */
-    private void searchForUsersByEmail(DBConnector db, UI ui) {
+    private void searchForUsersByEmail(DBHandler db, UI ui) {
         System.out.println();
         String email = elicitUserEmail();
         
@@ -417,39 +425,46 @@ public class UI {
     }
     
     /*
-     * Displays user that matches the name given.
+     * Elicits the user to enter a Name, and then calls the DB handler
+     * to find the users with the same name in the database. Calls displayUsers
+     * to print out the Users returned by the DB Handler
      */
-    private void searchForUsersByName(DBConnector db, UI ui) {
+    private void searchForUsersByName(DBHandler db, UI ui) {
+        //Esthetic padding
         System.out.println();
+        //get a user name
         String name = elicitUserName();
-        
+        //call the DB handler to get the Users
         ArrayList<User> users = db.searchForUserByName(name);
         if(users == null) {
+            //Error, shouldn't happen. Sanity check.
             System.out.println("searchForUsersByName: some sort of SQL error");   
         } else if(users.isEmpty()) {
             System.out.println("Sorry, no users found with that name.");
         } else {
+            //Pass the Users along to be displayed
             ui.displayUsers(db, ui, users);
         }
         return;
     }
     
     /*
-     * Allows user to search for other users using their name
-     * or email.
+     * Displays the User search Functionality Menu and launches
+     * either email search or name search based on user input.
      */
-    private void userSearch(DBConnector db, UI ui) {
+    private void userSearch(DBHandler db, UI ui) {
         //elicit the search type
         while(true) {
+            //print the menu
             ui.printUserSearchMenu();
             String response = in.nextLine();
             try {
                 int index = Integer.parseInt(response);
                 //Launch the Function based on input
                 switch(index) {
-                    case 1: ui.searchForUsersByEmail(db, ui);
+                    case 1: ui.searchForUsersByEmail(db, ui); //launch search by email
                             return;
-                    case 2: ui.searchForUsersByName(db, ui);
+                    case 2: ui.searchForUsersByName(db, ui); //launch search by name
                             return;
                     case 3: return;
                     default: System.out.print("Input not recognized. Try again."); //user entered a bad number
@@ -464,9 +479,12 @@ public class UI {
     }
     
     /*
-     * Allows user to create an ad.
+     * Elicits input from the user in order to create
+     * an Ad with the elicited info. Calls the DB handler
+     * to insert the Ad into the database as a row in the
+     * ads table.
      */
-    private void postAd(DBConnector db, UI ui) {
+    private void postAd(DBHandler db, UI ui) {
         
         //Elicit the Ad type
         String atype = null;
@@ -525,13 +543,14 @@ public class UI {
                 continue;
             }
         }
-        
+        //Elicit required information
         String title = elicitTitle();
         Integer price = elicitPrice();
         String descr = elicitDescr();
         String location = elicitLocation();
+        //build the new Ad type
         Ad ad = new Ad(atype, title, price, descr, location, cat);
-        
+        //call the DB handler to insert the ad.
         boolean rval = db.insertAd(ad, email);
         if(!rval) {
             System.out.println("Failed to insert Ad");
@@ -542,16 +561,19 @@ public class UI {
     }
     
     /*
-     * Displays ads that match input, displays 5 initially,
-     * gives users the option to view 5 more ads.
+     * Displays ads that are found in searchForAds. The ads are
+     * displayed 5 at a time until exhausted. Allows user to select 
+     * a specific ad by number and recieve more details.
      */
     private void displaySearchedAds(ArrayList<Ad> ads) {
-        int count = 1;
+        //Esthetic padding
         System.out.println();
+        //ads have been found
         if(ads.size() > 0){
             System.out.println("Found " + ads.size() + " Ads. Displaying search results...");
         }
-         
+        //loop through the ads displaying 5 at a time.
+        int count = 1;
         while(count <= ads.size()) {
             
             System.out.println( count + ")" + ads.get(count-1).toStringKeywordSearch());
@@ -574,6 +596,7 @@ public class UI {
             }
             
             if(count <= ads.size()) {
+                //see if the user wants to continue seeing ads.
                 System.out.print("Input S to stop displaying ads, or press Enter for more:");
                 //get the response
                 String response = in.nextLine();
@@ -583,6 +606,7 @@ public class UI {
             }
         }
         if(ads.size() > 0) {
+            //See if the user would like to see more details of an ad, by printed number.
             while(true) {
                 System.out.println();
                 System.out.print("If you would like to see more details of any of the above ads, " +
@@ -591,9 +615,11 @@ public class UI {
                 //get the response
                 String response = in.nextLine();
                 try {
+                    //read the index and print the extra ad info
                     int index = Integer.parseInt(response);
                     System.out.println(index + ")" + ads.get(index-1).toStringKeywordSearchAdvanced());
                 } catch (NumberFormatException nFE) {
+                    //user wants to return to main menu
                     if(response.trim().equalsIgnoreCase("")) {
                         break;
                     } else {
@@ -608,9 +634,11 @@ public class UI {
     }
     
     /*
-     * Allows users to search for ads by entering keywords.
+     * Allows users to enter keywords seperated by
+     * whitespace. Calls the DB Handler to query the database for 
+     * Ad titles or descriptions matching the keywords.
      */
-    private void searchForAds(DBConnector db, UI ui) {
+    private void searchForAds(DBHandler db, UI ui) {
         ArrayList<String> keywords = new ArrayList<String>();
         System.out.println();
         System.out.println("Ads can be searched for keyword in their titles or description.");
@@ -632,7 +660,7 @@ public class UI {
     }
     
     /*
-     * Prints the Ad type Selection menu
+     * Prints the Ad type Selection menu.
      */
     private void printAdTypes(){
         System.out.println();
@@ -645,7 +673,7 @@ public class UI {
     }
     
     /*
-     * Prints the ad management menu
+     * Prints the ad management menu.
      */
     private void printManageAdMenu() {
         System.out.println();
@@ -658,7 +686,7 @@ public class UI {
     }
     
     /*
-     * Prints the user display menu
+     * Prints the user display menu.
      */
     private void printUserDisplayMenu() {
         System.out.println();
@@ -671,7 +699,7 @@ public class UI {
     }
     
     /*
-     * Prints the user search root menu
+     * Prints the user search root menu.
      */
     private void printUserSearchMenu() {
         System.out.println();
@@ -684,7 +712,7 @@ public class UI {
     }
     
     /*
-     * Prints the Main root menu for System Functions
+     * Prints the Main root menu for System Functions.
      */
     private void printMainMenu() {
         System.out.println();
@@ -699,7 +727,7 @@ public class UI {
     }
     
     /*
-     * Prints the Login root menu
+     * Prints the Login root menu.
      */
     private void printLoginMenu() {
         System.out.println();
@@ -711,20 +739,22 @@ public class UI {
         System.out.print("Enter the corresponding number for your choice (1-3): ");
     }
     
-    /* TODO: comment inside me better
+    /* 
      * Executes the display reviews portion of the UI interaction.
      * Takes as argument an ArrayList of reviews to display to the
-     * user. Returns no value.
+     * user. 
      */
     private void displayReviews(ArrayList<Review> reviews) {
+        //Esthetic padding
         System.out.println();
         int count = 1;
         if(reviews.size() > 0){
+            //there are reviews to display
             System.out.println("Displaying new reviews since last login...");
         }
-        
+        //print ou the reviews
         while(count <= reviews.size()) {
-            
+            //display the reviews in pairs of 3
             System.out.println( count + ")" + reviews.get(count-1).toStringListing());
             count++;
             if(count <= reviews.size()) {
@@ -741,11 +771,13 @@ public class UI {
                 //get the response
                 String response = in.nextLine();
                 if(response.trim().equalsIgnoreCase("S")) {
+                    //stop displaying reviews
                     break;
                 }
             }
         }
         if(reviews.size() > 0) {
+            //see if user wants to see the rest of reviews
             while(true) {
                 System.out.print("If you would like to see more text of any of the above reviews " +
                                    "Enter its number, or E to continue: "
@@ -753,10 +785,12 @@ public class UI {
                 //get the response
                 String response = in.nextLine();
                 try {
+                    //print out the full review text.
                     int index = Integer.parseInt(response);
                     System.out.println(index + ")" + reviews.get(index-1).toStringFullText());
                 } catch (NumberFormatException nFE) {
                     if(response.trim().equalsIgnoreCase("E")) {
+                        //user wants to exit
                         break;
                     } else {
                         continue;
@@ -767,6 +801,7 @@ public class UI {
                 }
             }
         } else {
+            //there arent any new reviews
             System.out.println("Sorry, no new reviews since last login.");
         }
     }
@@ -776,7 +811,7 @@ public class UI {
      * DBHandler to see if the user name and password are correct.
      * If so, logs the user in.
      */
-    private void logIn(DBConnector db) {
+    private void logIn(DBHandler db) {
         boolean rval;
         //prompt for username
         System.out.print("Enter your email: ");
@@ -791,10 +826,11 @@ public class UI {
         //Ask the DB Handler to verify the username/password
         rval = db.verifyUser(getEmail(), password);
         if (!rval) {
-            System.out.println("Whoops, couldn't find that email/password in the database. Lets start over.");
+            System.out.println("Couldn't find that email/password in the database. Lets start over.");
             return;
         } else {
             System.out.println("You are now logged in.");
+            //log the user in
             setLoggedIn(true);
             return;
         }
@@ -805,20 +841,26 @@ public class UI {
      * Passes these onto the DBHandler to add a user to the database.
      * Logs the user in on success.
      */
-    private void createAccount(DBConnector db) {
+    private void createAccount(DBHandler db) {
+        //get the email and set it globally
         setEmail(elicitEmail(db));
+        //get the Name
         String name = elicitName(); 
+        //get the password
         String password = elicitPassword();
+        //get the DBHandler to add the user
         if(!db.addNewUser(getEmail(), name, password)) {
             System.err.println("Some sort of database error.");
             exit(db);
         }
-        System.out.println("Great! You're account is created and you are now logged in.");
+        System.out.println("You're account is created and you are now logged in.");
+        //Log the user in
         setLoggedIn(true);
     }
     
     /*
-     * Elicits and returns a 4 char max password from the console
+     * Elicits and returns a 4 char max password from the console.
+     * Does not accept empty string.
      */
     public static String elicitPassword() {
         String response;
@@ -838,6 +880,8 @@ public class UI {
     
     /*
      * Elicits an integer representing a rating.
+     * The value must be between 1 and 5.
+     * Does not accept empty string nor a negative number.
      */
     public static Integer elicitRating() {
         String response;
@@ -863,7 +907,8 @@ public class UI {
     }
     
     /*
-     * Elicits an integer representing Price from the console
+     * Elicits an integer representing Price from the console.
+     * Does not accept empty string nor a negative number.
      */
     public static Integer elicitPrice() {
         String response;
@@ -889,7 +934,8 @@ public class UI {
     }
     
     /*
-     * Elicits and returns a 15 char max location from the console
+     * Elicits and returns a 15 char max location from the console.
+     * Does not accept empty string.
      */
     public static String elicitLocation() {
         String response;
@@ -908,7 +954,8 @@ public class UI {
     }
     
     /*
-     * Elicits and returns a 80 char max review text from the console
+     * Elicits and returns a 80 char max review text from the console.
+     * Accepts empty string.
      */
     public static String elicitText() {
         String response;
@@ -925,7 +972,8 @@ public class UI {
     }
     
     /*
-     * Elicits and returns a 50 char max descr from the console
+     * Elicits and returns a 50 char max descr from the console.
+     * Does not accept empty string.
      */
     public static String elicitDescr() {
         String response;
@@ -944,7 +992,8 @@ public class UI {
     }
     
     /*
-     * Elicits and returns a 20 char max title from the console
+     * Elicits and returns a 20 char max title from the console.
+     * Does not accept empty string.
      */
     public static String elicitTitle() {
         String response;
@@ -963,7 +1012,8 @@ public class UI {
     }
     
     /*
-     * Elicits and returns a 20 char max name from the console
+     * Elicits and returns a 20 char max name from the console.
+     * Does not accept empty string.
      */
     public static String elicitUserName() {
         String response;
@@ -982,7 +1032,8 @@ public class UI {
     }
     
     /*
-     * Elicits and returns a 20 char max name from the console
+     * Elicits and returns a 20 char max name from the console.
+     * Does not accept empty string.
      */
     public static String elicitName() {
         String response;
@@ -1001,7 +1052,8 @@ public class UI {
     }
     
     /*
-     * Elicits and returns a 20 char max email(username) from the console
+     * Elicits and returns a 20 char max email(username) from the console.
+     * Does not accept empty string
      */
     public static String elicitUserEmail() {
         String response;
@@ -1020,9 +1072,10 @@ public class UI {
     }
     
     /*
-     * Elicits and returns a 20 char max email address from the console
+     * Elicits and returns a 20 char max email address from the console.
+     * Does not accept empty string.
      */
-    public static String elicitEmail(DBConnector db) {
+    public static String elicitEmail(DBHandler db) {
         String response;
         while(true) {
             System.out.print("Enter your email (20 chars max): ");
@@ -1046,8 +1099,8 @@ public class UI {
      * Closes the connection to the DB connector and
      * exits the program gracefully.
      */
-    private static void exit(DBConnector db) {
-     // close connection
+    private static void exit(DBHandler db) {
+        // close connection
         boolean rval = db.closeConnection();
         if(rval) {
             System.out.println("Goodbye!");
@@ -1059,7 +1112,7 @@ public class UI {
     }
 
     /*
-     * Just getters and setters beyond this point, no commenting required
+     * Just getters and setters beyond this point, no commenting required.
      */
     
     public String getJdbcUserName() {
