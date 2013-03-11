@@ -3,7 +3,7 @@ package MiniProjectTests;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import MiniProject1.Ad;
-import MiniProject1.DBConnector;
+import MiniProject1.DBHandler;
 import MiniProject1.Offer;
 import MiniProject1.Review;
 import MiniProject1.User;
@@ -44,7 +44,7 @@ public class DBConnectorTests {
         String jdbcPassword = "!MG~26^rx";
         
         //Test constructor
-        DBConnector db = new DBConnector(jdbcURL, jdbcUserName, jdbcPassword);
+        DBHandler db = new DBHandler(jdbcURL, jdbcUserName, jdbcPassword);
         assert db != null;
         assert db.getJdbcPassword() == "!MG~26^rx";
         assert db.getJdbcUserName() == "mgallowa";
@@ -260,7 +260,7 @@ public class DBConnectorTests {
     /*
      * Creates the hard coded tables
      */
-    public static void createTables(DBConnector db) {
+    public static void createTables(DBHandler db) {
         String categories = "create table categories " +
                 "(cat char(10)," +
                 "supercat char(10)," +
@@ -325,7 +325,7 @@ public class DBConnectorTests {
     /*
      * Drops the hard coded tables
      */
-    public static void dropTables(DBConnector db) {
+    public static void dropTables(DBHandler db) {
         try {   
             db.stmt.executeUpdate("drop table purchases");
             db.stmt.executeUpdate("drop table offers");
@@ -342,7 +342,7 @@ public class DBConnectorTests {
     /*
      * inserts test data
      */
-    public static void insertTestData(DBConnector db) {
+    public static void insertTestData(DBHandler db) {
         try {
             db.stmt.executeUpdate("insert into categories values ('buy/sell', null)");
             db.stmt.executeUpdate("insert into categories values ('services', null)");

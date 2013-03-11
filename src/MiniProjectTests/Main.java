@@ -21,7 +21,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import MiniProject1.DBConnector;
+import MiniProject1.DBHandler;
 
 
 
@@ -37,7 +37,7 @@ public class Main extends JFrame{
 	private static String jdbcUserName = "mgallowa"; //Hard coded, make dynamic before hand-in
 	private static String jdbcPassword = "!MG~26^rx"; //Hard coded, make dynamic before hand-in
 	//END FIX    
-	private static DBConnector db = null;
+	private static DBHandler db = null;
 
 	JPanel panel = new JPanel();
 
@@ -196,7 +196,7 @@ public class Main extends JFrame{
 
 
 		//Connect to DB
-		db = new DBConnector(jdbcURL, jdbcUserName, jdbcPassword);
+		db = new DBHandler(jdbcURL, jdbcUserName, jdbcPassword);
 		db.openConnection();
 
 		Main mymain = new Main();
