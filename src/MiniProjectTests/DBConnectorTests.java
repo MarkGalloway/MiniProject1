@@ -23,7 +23,7 @@ import MiniProject1.User;
  * Low Priority:
  * TODO: Superclass Ad
  * TODO: Comment every Class
- * 
+ * TODO: reject promotion on already promoted ad??
  * 
  */
 
@@ -240,6 +240,16 @@ public class DBConnectorTests {
             System.out.println("FAIL: addReview() had some sort of error");
         }
         
+        //getCategories() test
+        ArrayList<String> cats = db.getCategories();
+        if (cats != null) {
+            System.out.println("PASS: getCategories() returned successfully, check visually");
+            for (String s : cats) {
+                System.out.println(s);
+            }
+        } else {
+            System.out.println("FAIL: getCategories() had some sort of error");
+        }
         
         // close connection
         rval = db.closeConnection();

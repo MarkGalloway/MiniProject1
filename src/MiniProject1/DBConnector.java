@@ -605,6 +605,34 @@ public class DBConnector {
         return true;
     }
     
+    /*
+     * Queries the Database to get all of the 
+     * categories. Returns each category as a String element
+     * of an ArrayList.
+     * 
+     * Returns null on error.
+     */
+    public ArrayList<String> getCategories() {
+        //list to hold the return values
+        ArrayList<String> cats = new ArrayList<String>();
+        //query to get the categories
+        String query = "select cat from categories";
+        
+        try {
+            //get the categories from the DB using the query
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()){
+                //add each category to the return list
+                cats.add(rs.getString("cat").trim());
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        //return the categories
+        return cats;
+    }
+    
     public String getJdbcURL() {
         return jdbcURL;
     }
