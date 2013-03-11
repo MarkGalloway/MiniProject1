@@ -8,14 +8,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Image;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -38,180 +42,6 @@ public class Main extends JFrame{
 	private static String jdbcPassword = "!MG~26^rx"; //Hard coded, make dynamic before hand-in
 	//END FIX    
 	private static DBHandler db = null;
-
-	JPanel panel = new JPanel();
-
-	static String enteredtext = "a";
-	String[] arr = new String[3];
-
-	public Main() {
-		setSize(800,300);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setVisible(true);//Sets if its visible.
-
-		setTitle("MiniProject1");
-
-		SpringLayout springLayout = new SpringLayout();
-		getContentPane().setLayout(springLayout);
-		getContentPane().setBackground(Color.gray);
-
-		springLayout.putConstraint(SpringLayout.NORTH, panel, 10,
-				SpringLayout.NORTH, getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, panel, 10,
-				SpringLayout.WEST, getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, panel, 46,
-				SpringLayout.NORTH, getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, panel, 775,
-				SpringLayout.WEST, getContentPane());
-		getContentPane().add(panel);
-		
-
-		JButton btnSignUp = new JButton("Sign Up");
-		//add(btnLogin);
-				btnSignUp.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						System.out.print("Username:");//what the button says when clicked.
-						
-						Input.Bufferedreader();
-						
-						arr[0] = enteredtext;
-					    
-						System.out.print("Name:");
-						
-					    Input.Bufferedreader();
-					    
-					    arr[1] = enteredtext;
-						
-					    System.out.print("Password:");
-						
-					    Input.Bufferedreader();
-					   
-					    arr[2] = enteredtext;
-					    
-					    System.out.println( db.addNewUser(arr[0], arr[1], arr[2]));
-					}
-					
-				});
-				
-				panel.add(btnSignUp);
-
-		JButton btnLogin = new JButton("Login");
-		//add(btnLogin);
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.print("Username:");//what the button says when clicked.
-
-				Input.Bufferedreader();
-				
-				System.out.println(enteredtext);
-				
-				arr[0] = enteredtext;
-				
-				System.out.print("Password:");
-
-				Input.Bufferedreader();
-				
-				System.out.println(enteredtext);
-				
-				arr[1] = enteredtext;
-
-				//System.out.println( arr[0] +" "+ arr[1]);
-				
-				boolean checkUser = db.verifyUser(arr[0], arr[1]);
-				
-				if(checkUser==false){
-					System.out.println("Username or password are invalid");
-					
-				}
-				
-				//System.out.println( db.verifyUser(arr[0], arr[1]));
-
-				//System.out.println( db.existsUser(arr[0]) );
-			}
-
-		});
-
-		panel.add(btnLogin);
-
-		JButton btnSearchAds = new JButton("Search for Ads");
-		//add(btnOpen);
-		btnSearchAds.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.print("Search:");
-
-				Input.Bufferedreader();
-				
-			}
-		});
-
-		panel.add(btnSearchAds);
-
-
-		JButton btnListAd = new JButton("List an Ad");
-		//add(btnOpen);
-		btnListAd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.print("Search:");
-
-				Input.Bufferedreader();
-			}
-		});
-
-		panel.add(btnListAd);
-
-		JButton btnSearchforUser = new JButton("Search for Users");
-		//add(btnOpen);
-		btnSearchforUser.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.print("Search for User:");
-
-				Input.Bufferedreader();
-			}
-		});
-
-		panel.add(btnSearchforUser);
-
-		JButton btnPostanAd = new JButton("Post an Ad");
-		//add(btnOpen);
-		btnPostanAd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.print("Post an ad:");
-
-				Input.Bufferedreader();
-			}
-		});
-
-		panel.add(btnPostanAd);
-
-		JButton btnLogout = new JButton("Logout");
-		//add(btnOpen);
-		btnLogout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.print("Goodbye");
-				db.closeConnection();
-				panel.setVisible(false);
-				System.exit(0);
-			}
-		});
-
-		panel.add(btnLogout);
-
-		panel.revalidate(); //refresh panel
-	}
-	public static class Input {
-
-		public static void Bufferedreader(){
-			BufferedReader brText = new BufferedReader(new InputStreamReader(System.in));{
-				try {
-					 enteredtext = brText.readLine();
-					 
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 
 
 	public static void main(String[] args) {
