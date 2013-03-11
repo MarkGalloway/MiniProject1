@@ -5,33 +5,33 @@ import java.util.Scanner;
 
 /*
  * This is the main UI interaction class for MiniProject1. It contains the main
- * loop which controls execution and interaction with the user. it also has many user 
+ * loop which controls execution and interaction with the user. it also has many user
  * interaction elicitation methods. Furthermore, it also keeps track of databse usernames/password
- * and the email of the user. 
- * 
+ * and the email of the user.
+ *
  * Calls methods in DBHandler in order to access the database for based on user interactions.
  */
 public class UI {
-    private String jdbcURL = "jdbc:oracle:thin:@localhost:1525:CRS"; //TODO fix it   
+    private String jdbcURL = "jdbc:oracle:thin:@gwynne.cs.ualberta.ca:1521:CRS";
     private String jdbcUserName;
     private String jdbcPassword;
     private boolean loggedIn = false;
     private static String email;
     private static Scanner in = null;
-    
+
     /*
      * Empty private constructor
      */
     private UI(){
-        
+
     }
-    
+
     /*
      * Launches the main dialog execution of the text based UI
      */
     public static void main(String[] args) {
         /*
-         * variable declarations 
+         * variable declarations
          */
         //for testing return values for errors
         boolean rval;
@@ -39,7 +39,7 @@ public class UI {
         in = new Scanner(System.in);
         //A handle for our UI functions and variables
         UI ui = new UI();
-        
+
         /*
          * Oracle db connections
          */
@@ -48,7 +48,7 @@ public class UI {
         System.out.print("Enter your Oracle password: ");
         ui.setJdbcPassword(in.nextLine());
         System.out.println("Thanks, connecting you to the database now.");
-        
+
         //get a DB Handler object so we can talk to the database
         DBHandler db = new DBHandler(ui.jdbcURL, ui.getJdbcUserName(), ui.getJdbcPassword());
 
@@ -62,10 +62,10 @@ public class UI {
             System.err.println("Error: Failed to connect to database. Check your username/password, then restart the program");
             System.exit(0);
         }
-        
+
         //Welcome message
         System.out.println("Welcome to Ujiji!");
-        
+
         /*
          * Display Login Screen
          */
@@ -85,7 +85,7 @@ public class UI {
                     case 3: exit(db);
                             break;
                     default: System.out.print("Input not recognized. Try again."); //user entered a bad number
-                            continue;      
+                            continue;
                 }
             } catch (NumberFormatException nFE) {
                 //User entered a non-Integer
@@ -93,12 +93,12 @@ public class UI {
                 continue;
             }
         }
-        
+
         /*
          * List the reviews since last login.
          */
         ui.displayReviews(db.getReviews(getEmail()));
-        
+
         /*
          * Display Main Menu Screen
          */
@@ -123,7 +123,7 @@ public class UI {
                             exit(db);
                             break;
                     default: System.out.print("Input not recognized. Try again."); //user entered a bad number
-                            continue;      
+                            continue;
                 }
             } catch (NumberFormatException nFE) {
                 //User entered a non-Integer
@@ -134,20 +134,22 @@ public class UI {
     }
 
     /*
-     * Prompt user to choose an ad to promote.
-     * Promotes ad that has not yet been promoted.
+     * Takes as argument an Ad, for which the user is prompted
+     * to select one of the listed offers from the database. The
+     * promotion is then added to the Ad and inserted into the
+     * purchases table in the database.
      */
     private void promoteAd(DBHandler db, Ad ad) {
         if(db.hasPromotion(ad)) {
             System.out.println("Sorry, this ad already has a promotion. Cannot promote further");
             return;
         }
-        
+
         //Display the offers
         System.out.println();
         System.out.println("The available offers are as follows:");
         System.out.println("-----------------------------------------");
-        
+
         ArrayList<Offer> offers = db.getOffers();
         for(int i = 1; i <= offers.size()  ;i++) {
             System.out.println( i +") " + offers.get(i-1));
@@ -174,29 +176,33 @@ public class UI {
                 continue;
             }
         }
-        
+
         if (db.promoteAd(ad, offer) ){
             System.out.println("promotion added Successfully");
         } else {
             System.out.println("Some sort of database error added the promotion");
         }
     }
-    
+
     /*
-     * Propmts user to delete an ad.
+     * Takes an Ad object as an argument. Calls DBHandler's
+     * deleteAd() function to remove the add from the database
      */
     private void deleteAd(DBHandler db, Ad ad) {
-       boolean rval = db.deleteAd(ad);
+       //call DBHandler to delete the ad
+	   boolean rval = db.deleteAd(ad);
+	   //return value check
        if(rval) {
            System.out.println("Add successfully removed.");
        } else {
            System.out.println("Database error removing add");
        }
     }
-    
+
     /*
-     * Manages the options of deleting or promoting an
-     * ad.
+     * Takes a selected Ad object and prompts the user to choose
+     * to either Delete the ad, promote the ad, or return to the
+     * main menu.
      */
     private void manageAd(DBHandler db, UI ui, Ad ad) {
         while(true) {
@@ -207,11 +213,11 @@ public class UI {
                  int index = Integer.parseInt(response);
                  //Launch the Function based on input
                  switch(index) {
-                     case 1: ui.deleteAd(db, ad);
+                     case 1: ui.deleteAd(db, ad); //launch delete ad UI
                              return;
-                     case 2: ui.promoteAd(db, ad);
+                     case 2: ui.promoteAd(db, ad); //launch promote ad UI
                              return;
-                     case 3: return;
+                     case 3: return; //return to main menu
                      default: System.out.print("Input not recognized. Try again."); //user entered a bad number
                              continue;
                  }
@@ -222,7 +228,7 @@ public class UI {
              }
         }
     }
-    
+
     /*
      * Lists the users own ads, displaying 5 initially,
      * asking whether the user wants to display 5 more ads.
@@ -231,25 +237,27 @@ public class UI {
     private void listOwnAds(DBHandler db, UI ui) {
         //get the ads
         ArrayList<Ad> ads = db.getOwnAds(UI.getEmail());
-        
+
+		//DBHandler returned an SQL error
         if(ads == null) {
             System.out.println("SQL error with the query.");
             return;
         }
-        
+		//user has no ads
         if(ads.isEmpty()) {
             System.out.println("No ads were found.");
             return;
         }
-        
+
+		//Display the ads
         System.out.println();
         int count = 1;
         if(ads.size() > 0){
             System.out.println("Found " + ads.size() + " Ads. Displaying search results...");
         }
-         
+
         while(count <= ads.size()) {
-            
+
             System.out.println( count + ")" + ads.get(count-1).toStringListOwnAds());
             count++;
             if(count <= ads.size()) {
@@ -268,7 +276,7 @@ public class UI {
                 System.out.println( count + ")" + ads.get(count-1).toStringListOwnAds());
                 count++;
             }
-            
+			//query to display more ads
             if(count <= ads.size()) {
                 System.out.print("Input S to stop displaying ads, or press Enter for more:");
                 //get the response
@@ -278,6 +286,7 @@ public class UI {
                 }
             }
         }
+		//ask the user if they want to promote or delete the ad
         if(ads.size() > 0) {
             while(true) {
                 System.out.print("If you would like to delete or promote of any of the above ads, " +
@@ -287,11 +296,11 @@ public class UI {
                 String response = in.nextLine();
                 try {
                     int index = Integer.parseInt(response);
-                    manageAd(db, ui, ads.get(index-1));
+                    manageAd(db, ui, ads.get(index-1)); //launch the add management UI
                     return;
                 } catch (NumberFormatException nFE) {
                     if(response.trim().equalsIgnoreCase("")) {
-                        return;
+                        return; //user wants to exit()
                     } else {
                         System.out.println("Not a valid Ad Number. Try again.");
                     }
@@ -302,61 +311,76 @@ public class UI {
             }
         }
     }
-    
+
     /*
-     * Shows reviews made by the users that matches input.
+     * Takes an email argument parameter, calls DBHandler to get the
+     * reviews from the database that correspond to the email as a reviewee.
+     * Prints out the review texts of the reviews
      */
     private void printUsersReviews(DBHandler db, UI ui, String email) {
-        
+		//Esthetics
         System.out.println();
-        
+		//get the reviews of the user
         ArrayList<Review> reviews = db.getUserReviews(email);
         if(reviews == null) {
+			//error check
             System.out.println("Had some sort of SQL error with the database");
             return;
         }
         else if(reviews.isEmpty()) {
+			//User has no reviews
             System.out.println("That user has no reviews");
             return;
-        }        
+        }
+		//print out the reviews
         System.out.println("Here is " + email +" review texts:");
         for(Review r : reviews) {
             System.out.println(r.toStringFullText());
         }
     }
-    
+
     /*
-     * Allows user to write a review.
+	 * UI to write a review for another user
+     * Takes as argument the email of a reviewee. Elicits a Rating
+     * and optional review Text from the user. Creates a Review
+     * object and send the review object to DBHandler to be stored into
+     * the database.
      */
     private void writeUserReview(DBHandler db, UI ui, String email) {
-        
+		//get the rating and text
         Integer rating = elicitRating();
         String text = elicitText();
-        
+
+		//call DBHandler to add the review
         boolean rval = db.addReview(new Review(rating, text, UI.email, email));
+		//check the return value
         if(!rval) {
             System.out.println("SQL error when inserting review");
         } else {
             System.out.println("Review entered successfully.");
         }
     }
-    
+
     /*
-     * Displys a user.
+     * Takes an ArrayList of Users objects which have been returned
+     * from a search for users, and prints out the toString representation of
+     * each user. Allows System User to select one of these users and pass the
+     * User object to other functions to either write a review, or view the users
+     * reviews, or go back to main menu.
      */
     private void displayUsers(DBHandler db, UI ui, ArrayList<User> users) {
-        
+
         //Shouldn't happen, but sanity check
         if( users.isEmpty()) {
             System.out.println("Sorry, no users found");
             return;
         }
-        
+		//print out the users
         System.out.println("Here are the found users: ");
         for(int i = 1; i <= users.size() ;i++) {
             System.out.println( i +") " + users.get(i-1).toString());
         }
-        
+
         //get the user
         User usr = null;
         while(usr == null) {
@@ -371,6 +395,7 @@ public class UI {
                     System.out.print("Incorrect number. Try again");
                     continue;
                 } else {
+					//get the user, ends the loop
                     usr = users.get(index - 1);
                 }
             }  catch (NumberFormatException nFE) {
@@ -379,7 +404,7 @@ public class UI {
                 continue;
             }
         }
-        
+		//Elicit a selection from the user
         while(true) {
            //display the menu
             ui.printUserDisplayMenu();
@@ -388,9 +413,9 @@ public class UI {
                 int index = Integer.parseInt(response);
                 //Launch the Function based on input
                 switch(index) {
-                    case 1: ui.printUsersReviews(db, ui, usr.getEmail());
+                    case 1: ui.printUsersReviews(db, ui, usr.getEmail()); //UI to print the reviews of the user
                             continue;
-                    case 2: ui.writeUserReview(db, ui, usr.getEmail());
+                    case 2: ui.writeUserReview(db, ui, usr.getEmail()); // UI to write a review for the user
                             continue;
                     case 3: return;
                     default: System.out.print("Input not recognized. Try again."); //user entered a bad number
@@ -402,28 +427,32 @@ public class UI {
                 continue;
             }
         }
-        
+
     }
-    
+
     /*
-     * Displays user that matches the email given.
+     * Elicits an email from the console. Sends this email through the
+     * DBHandler in order to select the User. The user is then displayed,
+     * if exists.
      */
     private void searchForUsersByEmail(DBHandler db, UI ui) {
-        System.out.println();
+        //Esthetics
+		System.out.println();
+		//get the email
         String email = elicitUserEmail();
-        
+		//search for the user
         User user = db.searchForUserByEmail(email);
         if (user != null) {
             ArrayList<User> users = new ArrayList<User>();
             users.add(user);
-            ui.displayUsers(db, ui, users);
+            ui.displayUsers(db, ui, users); // UI for dislplaying the user
             return;
         } else {
             System.out.println("Sorry, no user found with that email.");
             return;
         }
     }
-    
+
     /*
      * Elicits the user to enter a Name, and then calls the DB handler
      * to find the users with the same name in the database. Calls displayUsers
@@ -438,7 +467,7 @@ public class UI {
         ArrayList<User> users = db.searchForUserByName(name);
         if(users == null) {
             //Error, shouldn't happen. Sanity check.
-            System.out.println("searchForUsersByName: some sort of SQL error");   
+            System.out.println("searchForUsersByName: some sort of SQL error");
         } else if(users.isEmpty()) {
             System.out.println("Sorry, no users found with that name.");
         } else {
@@ -447,7 +476,7 @@ public class UI {
         }
         return;
     }
-    
+
     /*
      * Displays the User search Functionality Menu and launches
      * either email search or name search based on user input.
@@ -477,7 +506,7 @@ public class UI {
             }
         }
     }
-    
+
     /*
      * Elicits input from the user in order to create
      * an Ad with the elicited info. Calls the DB handler
@@ -485,12 +514,12 @@ public class UI {
      * ads table.
      */
     private void postAd(DBHandler db, UI ui) {
-        
+
         //Elicit the Ad type
         String atype = null;
         while(atype == null) {
             ui.printAdTypes();
-            
+
             String response = in.nextLine();
             try {
                 int index = Integer.parseInt(response);
@@ -510,12 +539,12 @@ public class UI {
                 continue;
             }
         }
-        
+
         //Display the categories
         System.out.println();
         System.out.println("The available categories are as follows:");
         System.out.println("-----------------------------------------");
-        
+
         ArrayList<String> cats = db.getCategories();
         for(int i = 1; i <= cats.size()  ;i++) {
             System.out.println( i +") " + cats.get(i-1));
@@ -536,7 +565,7 @@ public class UI {
                 } else {
                     cat = cats.get(index - 1);
                 }
-                
+
             }  catch (NumberFormatException nFE) {
                 //User entered a non-Integer
                 System.out.print("Input not recognized. Try again");
@@ -557,12 +586,12 @@ public class UI {
         } else {
             System.out.println("Add entered successfully!");
         }
-        
+
     }
-    
+
     /*
      * Displays ads that are found in searchForAds. The ads are
-     * displayed 5 at a time until exhausted. Allows user to select 
+     * displayed 5 at a time until exhausted. Allows user to select
      * a specific ad by number and recieve more details.
      */
     private void displaySearchedAds(ArrayList<Ad> ads) {
@@ -575,7 +604,7 @@ public class UI {
         //loop through the ads displaying 5 at a time.
         int count = 1;
         while(count <= ads.size()) {
-            
+
             System.out.println( count + ")" + ads.get(count-1).toStringKeywordSearch());
             count++;
             if(count <= ads.size()) {
@@ -594,7 +623,7 @@ public class UI {
                 System.out.println( count + ")" + ads.get(count-1).toStringKeywordSearch());
                 count++;
             }
-            
+
             if(count <= ads.size()) {
                 //see if the user wants to continue seeing ads.
                 System.out.print("Input S to stop displaying ads, or press Enter for more:");
@@ -632,10 +661,10 @@ public class UI {
             }
         }
     }
-    
+
     /*
      * Allows users to enter keywords seperated by
-     * whitespace. Calls the DB Handler to query the database for 
+     * whitespace. Calls the DB Handler to query the database for
      * Ad titles or descriptions matching the keywords.
      */
     private void searchForAds(DBHandler db, UI ui) {
@@ -643,7 +672,7 @@ public class UI {
         System.out.println();
         System.out.println("Ads can be searched for keyword in their titles or description.");
         System.out.print("Enter each search keyword seperated by whitespace, then press Enter when done: ");
-        
+
         for( String s : in.nextLine().split("\\s+")) {
             keywords.add(s);
         }
@@ -658,7 +687,7 @@ public class UI {
         }
         return;
     }
-    
+
     /*
      * Prints the Ad type Selection menu.
      */
@@ -671,7 +700,7 @@ public class UI {
         System.out.println("3) Go back to main menu");
         System.out.print("Enter the number corresponding to the Ad type you want: ");
     }
-    
+
     /*
      * Prints the ad management menu.
      */
@@ -684,7 +713,7 @@ public class UI {
         System.out.println("3) Return to Main Menu");
         System.out.print("Enter the corresponding number for your choice (1-3): ");
     }
-    
+
     /*
      * Prints the user display menu.
      */
@@ -697,7 +726,7 @@ public class UI {
         System.out.println("3) Return to Main Menu");
         System.out.print("Enter the corresponding number for your choice (1-3): ");
     }
-    
+
     /*
      * Prints the user search root menu.
      */
@@ -710,7 +739,7 @@ public class UI {
         System.out.println("3) Return to Main Menu");
         System.out.print("Enter the corresponding number for your choice (1-3): ");
     }
-    
+
     /*
      * Prints the Main root menu for System Functions.
      */
@@ -725,7 +754,7 @@ public class UI {
         System.out.println("5) Logout");
         System.out.print("Enter the corresponding number for your choice (1-5): ");
     }
-    
+
     /*
      * Prints the Login root menu.
      */
@@ -738,11 +767,11 @@ public class UI {
         System.out.println("3) Exit the program");
         System.out.print("Enter the corresponding number for your choice (1-3): ");
     }
-    
-    /* 
+
+    /*
      * Executes the display reviews portion of the UI interaction.
      * Takes as argument an ArrayList of reviews to display to the
-     * user. 
+     * user.
      */
     private void displayReviews(ArrayList<Review> reviews) {
         //Esthetic padding
@@ -765,7 +794,7 @@ public class UI {
                 System.out.println( count + ")" + reviews.get(count-1).toStringListing());
                 count++;
             }
-            
+
             if(count <= reviews.size()) {
                 System.out.print("Input S to stop displaying reviews, or press Enter for more:");
                 //get the response
@@ -805,9 +834,9 @@ public class UI {
             System.out.println("Sorry, no new reviews since last login.");
         }
     }
-    
+
     /*
-     * Elicits an email and password from console. Checks with the 
+     * Elicits an email and password from console. Checks with the
      * DBHandler to see if the user name and password are correct.
      * If so, logs the user in.
      */
@@ -817,12 +846,12 @@ public class UI {
         System.out.print("Enter your email: ");
         //get the username
         setEmail(Utils.stringChop(in.nextLine().trim(), 20));
-        
+
         //prompt for password
         System.out.print("Now enter your password: ");
         //get the password
         String password = Utils.stringChop(in.nextLine().trim(), 20);
-        
+
         //Ask the DB Handler to verify the username/password
         rval = db.verifyUser(getEmail(), password);
         if (!rval) {
@@ -835,7 +864,7 @@ public class UI {
             return;
         }
     }
-    
+
     /*
      * Elicits an email, name, and password from the console.
      * Passes these onto the DBHandler to add a user to the database.
@@ -845,7 +874,7 @@ public class UI {
         //get the email and set it globally
         setEmail(elicitEmail(db));
         //get the Name
-        String name = elicitName(); 
+        String name = elicitName();
         //get the password
         String password = elicitPassword();
         //get the DBHandler to add the user
@@ -857,7 +886,7 @@ public class UI {
         //Log the user in
         setLoggedIn(true);
     }
-    
+
     /*
      * Elicits and returns a 4 char max password from the console.
      * Does not accept empty string.
@@ -877,7 +906,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Elicits an integer representing a rating.
      * The value must be between 1 and 5.
@@ -905,7 +934,7 @@ public class UI {
         }
         return rval;
     }
-    
+
     /*
      * Elicits an integer representing Price from the console.
      * Does not accept empty string nor a negative number.
@@ -932,7 +961,7 @@ public class UI {
         }
         return rval;
     }
-    
+
     /*
      * Elicits and returns a 15 char max location from the console.
      * Does not accept empty string.
@@ -952,7 +981,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Elicits and returns a 80 char max review text from the console.
      * Accepts empty string.
@@ -970,7 +999,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Elicits and returns a 50 char max descr from the console.
      * Does not accept empty string.
@@ -990,7 +1019,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Elicits and returns a 20 char max title from the console.
      * Does not accept empty string.
@@ -1010,7 +1039,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Elicits and returns a 20 char max name from the console.
      * Does not accept empty string.
@@ -1030,7 +1059,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Elicits and returns a 20 char max name from the console.
      * Does not accept empty string.
@@ -1050,7 +1079,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Elicits and returns a 20 char max email(username) from the console.
      * Does not accept empty string
@@ -1070,7 +1099,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Elicits and returns a 20 char max email address from the console.
      * Does not accept empty string.
@@ -1094,7 +1123,7 @@ public class UI {
         }
         return response;
     }
-    
+
     /*
      * Closes the connection to the DB connector and
      * exits the program gracefully.
@@ -1114,7 +1143,7 @@ public class UI {
     /*
      * Just getters and setters beyond this point, no commenting required.
      */
-    
+
     public String getJdbcUserName() {
         return jdbcUserName;
     }
@@ -1134,11 +1163,11 @@ public class UI {
         this.jdbcPassword = jdbcPassword;
     }
 
-    
+
     public static String getEmail() {
         return email;
     }
-    
+
 
     public static void setEmail(String email) {
         UI.email = email;
