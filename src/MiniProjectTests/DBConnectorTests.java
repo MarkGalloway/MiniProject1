@@ -12,18 +12,15 @@ import MiniProject1.User;
 /* TODO LIST:::::
  * 
  * High priority:
- * TODO: Categories from the categories table!!! getCategories()
  * TODO: The Design Document
- * 
- * Medium Priority:
- * TODO: 2. clarify "My system should keep a record"
- * TODO: Havent been chopping all inputs..
-
+ * TODO: Comment every Class //TODO: Mega Comments HIGH
+ * //HIGH: sanity checks. Email must not be empty string. most categories should not be empty string. FUCK
  * 
  * Low Priority:
  * TODO: Superclass Ad
- * TODO: Comment every Class
- * TODO: reject promotion on already promoted ad??
+ * //TODO: put jdbc url back to normal
+  // change review/ad printing BS to use continue and modulo
+    
  * 
  */
 
@@ -86,8 +83,8 @@ public class DBConnectorTests {
         System.out.println("DONE: End bob@ujiji.com, check visually");
         
         //test update login_date
-        db.updateLoginDate("bob@ujiji.com");
-        System.out.println("DONE: Date Updated, check visually");
+//        db.updateLoginDate("bob@ujiji.com");
+//        System.out.println("DONE: Date Updated, check visually");
         
         //add new user test
         rval = db.addNewUser("mgallowa@email.com", "Mark Galloway", "1234");
@@ -115,12 +112,12 @@ public class DBConnectorTests {
         
         
         //addNewUser - try to add an existing user
-        rval = db.addNewUser("mgallowa@email.com", "Mark Galloway", "1234");
-        if(!rval){
-            System.out.println("PASS: Existing user check succeeded");
-        } else {
-            System.out.println("FAIL: addNewUser failed to recognize existing user");
-        }
+//        rval = db.addNewUser("mgallowa@email.com", "Mark Galloway", "1234");
+//        if(!rval){
+//            System.out.println("PASS: Existing user check succeeded");
+//        } else {
+//            System.out.println("FAIL: addNewUser failed to recognize existing user");
+//        }
         
         //verifyUser check
         rval = db.verifyUser("mgallowa@email.com", "1234");
@@ -356,7 +353,7 @@ public class DBConnectorTests {
             db.stmt.executeUpdate("insert into categories values ('computer', 'services')");
             
             db.stmt.executeUpdate("insert into users values ('joe@ujiji.com','Joe Plumber', '1111', SYSDATE-2)");
-            db.stmt.executeUpdate("insert into users values ('bob@ujiji.com','Bob Carpenter', '2222', SYSDATE-5)");
+            db.stmt.executeUpdate("insert into users values ('bob@ujiji.com','Bob Carpenter', '2222', SYSDATE-6)");
             db.stmt.executeUpdate("insert into users values ('davood@ujiji.com','Davood Teacher', '3333', SYSDATE-1)");
             db.stmt.executeUpdate("insert into users values ('adam@sport.com','Adam Fan', '4444', SYSDATE-1)");
             db.stmt.executeUpdate("insert into users values ('Hagrid@hogwarts.com','Rubeus Hagred', '1212', SYSDATE-1)");
@@ -372,6 +369,7 @@ public class DBConnectorTests {
             
             db.stmt.executeUpdate("insert into reviews values (1,5,'This review shows up for bob first', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-2)");
             db.stmt.executeUpdate("insert into reviews values (5,5,'This review shows up for bob third', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-4)");
+            db.stmt.executeUpdate("insert into reviews values (12,5,'This review shows up for bob fourth', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-5)");
             db.stmt.executeUpdate("insert into reviews values (4,5,'This review shows up for bob second', 'joe@ujiji.com', 'bob@ujiji.com', SYSDATE-3)");
             db.stmt.executeUpdate("insert into reviews values (2,5,'This shows up for joe and cuts out  now and does not show more', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE)");
             db.stmt.executeUpdate("insert into reviews values (3,4,'This review shouldnt show up for joe', 'bob@ujiji.com', 'joe@ujiji.com', SYSDATE-3)");

@@ -26,7 +26,8 @@ public class DBConnector {
     private String jdbcPassword;
     
     /*
-     * Constructor
+     * Constructor. Creates a DB object with the 
+     * specified URl, username, and password
      */
     public DBConnector(String URL, String uname, String pwd ) {
         super();
@@ -88,7 +89,7 @@ public class DBConnector {
         ArrayList<Review> reviews = new ArrayList<Review>();
         
         //input length and sql string conversion
-        String usr = "'" + Utils.stringChop(username,20)  + "'";
+        String usr = "'" + username  + "'";
         
         //query to get the users reviews which are new since last login
         String query = "select *" +
@@ -154,8 +155,8 @@ public class DBConnector {
     public boolean verifyUser(String username, String password) {
         
         //input length and SQLstring conversion
-        String usr = "'" + Utils.stringChop(username,20) + "'";
-        String pwd = "'" + Utils.stringChop(password,4) + "'";
+        String usr = "'" + username + "'";
+        String pwd = "'" + password + "'";
         
         //query to get all users
         String query ="select email,pwd from users" +
@@ -186,7 +187,7 @@ public class DBConnector {
     public boolean existsUser(String username) {
         
         //input length conversion
-        String usr = "'" + Utils.stringChop(username,20) + "'";
+        String usr = "'" + username + "'";
         
         //query to select primary key of all users
         String query ="select email from users where email = " + usr;
@@ -211,26 +212,12 @@ public class DBConnector {
      * Adds a new user to the Users table.
      * 
      * returns true if user added successfully
-     * returns false if user already exists
+     * returns false on SQL error
      * 
      */
-    public boolean addNewUser(String username, String nameString, String password) {        
-        
-        //input length conversion
-        String usr = Utils.stringChop(username,20);
-        String pwd = Utils.stringChop(password,4);
-        String name = Utils.stringChop(nameString,20);
-        
-        //if user already exists, then reject.
-        if(existsUser(usr)) {
-            return false;
-        }
-        
+    public boolean addNewUser(String usr, String name, String pwd) {
         //query to return the users table
         String query = "select email,name,pwd,last_login from users";
-        //the current date
-        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
-        
         try {
             //execute query
             ResultSet rs = stmt.executeQuery(query);
@@ -240,11 +227,12 @@ public class DBConnector {
             rs.updateString("email", usr);
             rs.updateString("name",name);
             rs.updateString("pwd", pwd);
-            rs.updateDate("last_login", sqlDate);
+            rs.updateDate("last_login", Utils.generateDate());
             //make permanent
             rs.insertRow();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            return false;
         }
         return true;
     }
@@ -311,7 +299,7 @@ public class DBConnector {
         ArrayList<Ad> ads = new ArrayList<Ad>();
         
         //convert username
-        String usr = "'" + Utils.stringChop(username,20) + "'";
+        String usr = "'" + username + "'";
         //auery to return all ads which have been posted by the username and the time left on purchased offers (if any)
         String query = "select A.aid, atype, title, A.price, pdate, round(ndays - (sysdate - start_date)) as ldate" +
         		      " from ads A left outer join purchases P on A.aid=P.aid left outer join offers O on P.ono=O.ono" +
@@ -438,6 +426,27 @@ public class DBConnector {
             return false;
         }
         return true;
+    }
+    
+    /*
+     * Takes an Ad objecrt as argument and queries the database
+     * to see if the Ad has any promotions.
+     * Returns true if the add has promotions, false otherwise
+     */
+    public boolean hasPromotion(Ad ad) {
+        String query = "select * from purchases where aid = " + "'" +ad.getAid() + "'";
+        
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            if(rs.next()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
     
     /*
@@ -603,6 +612,38 @@ public class DBConnector {
         }
         
         return true;
+    }
+    
+    /*
+     * Takes as input a 'username' and returns an ArrayList of the Reviews corresponding 'username' 
+     * 
+     * Returns null on failure
+     */
+    public ArrayList<Review> getUserReviews(String email) {
+      //to hold return values
+        ArrayList<Review> reviews = new ArrayList<Review>();
+        
+        //input length and sql string conversion
+        String usr = "'" + email  + "'";
+        
+        //query to get the users reviews which are new since last login
+        String query = "select *" +
+                      " from reviews R" +
+                      " where R.reviewee = "+ usr +
+                      " order by R.rdate DESC";
+        try {
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()){
+                //add returned data to arraylist
+                reviews.add(new Review(rs.getInt("rating"), rs.getString("text").trim(), 
+                        rs.getString("reviewer").trim(), rs.getString("reviewee").trim(), rs.getDate("rdate")));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return reviews;
     }
     
     /*

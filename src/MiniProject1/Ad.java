@@ -62,6 +62,9 @@ public class Ad {
         this.setAvgRating(avgRating);
     }
     
+    /*
+     * Returns a string containing the printable representation of ones own ad
+     */
     public String toStringListOwnAds() {
         String s = "Ad Type: " + this.getAtype() + ", Title: " + this.getTitle() + ", Price: " + this.getPrice() + ", Posting Date: " + this.getPdate();
         if(this.getDaysLeft() != 0) {

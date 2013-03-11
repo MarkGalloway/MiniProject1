@@ -25,7 +25,7 @@ public class Review {
     }
     
     /*
-     * Constructor for a review got of the Database
+     * Constructor for a review got off the Database
      */
     public Review(Integer rating, String text, String reviewer, String reviewee, Date rdate) {
         super();

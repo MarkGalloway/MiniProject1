@@ -1,4 +1,4 @@
-package MiniProject1;
+package MiniProjectTests;
 
 
 
@@ -20,6 +20,8 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+
+import MiniProject1.DBConnector;
 
 
 
