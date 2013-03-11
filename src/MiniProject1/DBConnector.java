@@ -103,7 +103,7 @@ public class DBConnector {
             
             while(rs.next()){
                 //add returned data to arraylist
-                reviews.add(new Review(rs.getInt("rno"), rs.getInt("rating"), rs.getString("text").trim(), 
+                reviews.add(new Review(rs.getInt("rating"), rs.getString("text").trim(), 
                         rs.getString("reviewer").trim(), rs.getString("reviewee").trim(), rs.getDate("rdate")));
             }
         } catch (SQLException e) {
@@ -560,6 +560,49 @@ public class DBConnector {
         }
         //return the users
         return users;
+    }
+    
+    /*
+     * Takes as argument a Review object. Generates a random ID and 
+     * queries the Database to see if that ID is not in the system. IF it is,
+     * then a new one is generated and the process repeats. Once a unique ID is found
+     * the Database is queried for the reviews table and a new row is inserted with the
+     * new id, the current system date, and the data contained in the Review argument.
+     * 
+     * Returns true on success, false on error conditions
+     */
+    public boolean addReview(Review review) {
+        
+        //random new (possibly) Unique ID
+        String rno = Utils.generateRandom();
+        String query1 = "select rno from reviews where rno = " + "'" + rno + "'";
+        String query2 = "select rno, rating, text, reviewer, reviewee, rdate from reviews";
+        
+        try {
+            //keep generating new random ID until we have a unique one
+            ResultSet rs = stmt.executeQuery(query1);
+            while(rs.next()) {
+                //query returned a match, id already exists
+                rno = Utils.generateRandom();
+                rs = stmt.executeQuery(query1);
+            }
+            //get the table
+            rs = stmt.executeQuery(query2);
+            //add new row and values to table
+            rs.moveToInsertRow();
+            rs.updateString("rno", rno);
+            rs.updateInt("rating", review.getRating());
+            rs.updateString("text", review.getText());
+            rs.updateString("reviewer", review.getReviewer());
+            rs.updateString("reviewee", review.getReviewee());
+            rs.updateDate("rdate", Utils.generateDate());
+            rs.insertRow();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        
+        return true;
     }
     
     public String getJdbcURL() {

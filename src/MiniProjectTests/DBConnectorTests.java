@@ -12,16 +12,17 @@ import MiniProject1.User;
 /* TODO LIST:::::
  * 
  * High priority:
- *          TODO: write reviews
+ * TODO: Categories from the categories table!!! getCategories()
  * TODO: The Design Document
  * 
  * Medium Priority:
  * TODO: 2. clarify "My system should keep a record"
- * TODO: Havent been chopping all inputs.. maybe katherine will do this
- * TODO: Categories from the categories table!!! getCategories()
+ * TODO: Havent been chopping all inputs..
+
  * 
  * Low Priority:
  * TODO: Superclass Ad
+ * TODO: Comment every Class
  * 
  * 
  */
