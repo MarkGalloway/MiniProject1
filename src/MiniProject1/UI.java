@@ -127,7 +127,8 @@ public class UI {
     }
 
     /*
-     * TODO
+     * Prompt user to choose an ad to promote.
+     * Promotes ad that has not yet been promoted.
      */
     private void promoteAd(DBConnector db, Ad ad) {
         if(db.hasPromotion(ad)) {
@@ -175,7 +176,7 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Propmts user to delete an ad.
      */
     private void deleteAd(DBConnector db, Ad ad) {
        boolean rval = db.deleteAd(ad);
@@ -187,7 +188,8 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Manages the options of deleting or promoting an
+     * ad.
      */
     private void manageAd(DBConnector db, UI ui, Ad ad) {
         while(true) {
@@ -215,7 +217,9 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Lists the users own ads, displaying 5 initially,
+     * asking whether the user wants to display 5 more ads.
+     * Gives users the option to promote or delete their ads.
      */
     private void listOwnAds(DBConnector db, UI ui) {
         //get the ads
@@ -293,7 +297,7 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Shows reviews made by the users that matches input.
      */
     private void printUsersReviews(DBConnector db, UI ui, String email) {
         
@@ -315,7 +319,7 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Allows user to write a review.
      */
     private void writeUserReview(DBConnector db, UI ui, String email) {
         
@@ -331,7 +335,7 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Displys a user.
      */
     private void displayUsers(DBConnector db, UI ui, ArrayList<User> users) {
         
@@ -395,7 +399,7 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Displays user that matches the email given.
      */
     private void searchForUsersByEmail(DBConnector db, UI ui) {
         System.out.println();
@@ -414,7 +418,7 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Displays user that matches the name given.
      */
     private void searchForUsersByName(DBConnector db, UI ui) {
         System.out.println();
@@ -432,7 +436,8 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Allows user to search for other users using their name
+     * or email.
      */
     private void userSearch(DBConnector db, UI ui) {
         //elicit the search type
@@ -460,7 +465,7 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Allows user to create an ad.
      */
     private void postAd(DBConnector db, UI ui) {
         
@@ -538,7 +543,8 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Displays ads that match input, displays 5 initially,
+     * gives users the option to view 5 more ads.
      */
     private void displaySearchedAds(ArrayList<Ad> ads) {
         int count = 1;
@@ -603,7 +609,7 @@ public class UI {
     }
     
     /*
-     * TODO
+     * Allows users to search for ads by entering keywords.
      */
     private void searchForAds(DBConnector db, UI ui) {
         ArrayList<String> keywords = new ArrayList<String>();
